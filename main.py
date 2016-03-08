@@ -1,5 +1,5 @@
 import v
-import literals
+import keys
 
 import neovim
 import subprocess
@@ -46,9 +46,8 @@ def main():
     with open(vFile) as source:
         for line in source:
             for char in line:
-                if ord(char) < 128:
-                    vInstance.keyStroke(char)
-            vInstance.keyStroke(literals.enter)
+                vInstance.keyStroke(char)
+            vInstance.keyStroke(keys.enter)
 
     for line in vInstance.getText():
         for char in line:

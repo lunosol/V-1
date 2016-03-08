@@ -1,5 +1,5 @@
 import neovim
-import literals
+import keys
 
 import os
 import time
@@ -13,6 +13,9 @@ class V:
         self.nvimInstance = neovim.attach("socket", path="/tmp/nvim")
         self.fileName = secondaryFileName
 
+        self.pendingNumber = ""
+        self.pendingCommand = None
+
         if self.fileName:
             self.nvimInstance.input(":e! " + secondaryFileName + chr(13))
        
@@ -23,8 +26,44 @@ class V:
         os.system(arg)
     
     def keyStroke(self, key):
-        #Add more parsing
-        self.nvimInstance.input(key)
+        if self.pendingCommand != None:
+            result = self.pendingCommand.addArg(key)
+
+        else:
+            if key.isdigit():
+                self.pendingNumber += key
+                
+            elif key not in keys.vKeys:
+                if self.pendingNumber != "":
+                    self.nvimInstance.input(self.pendingNumber)
+                    self.pendingNumber = ""
+                self.nvimInstance.input(key)
+        
+            else:
+                self.pendingCommand = keys.key(key, self.pendingNumber)
+
+        if self.pendingCommand != None and self.pendingCommand.ready():
+            self.pendingCommand.run(self.nvimInstance)
+            self.pendingCommand = None
+                    
+
+    def setRegister(self, register, value):
+        command = ":let {}='{}'".format(register, value)
+        try:
+            self.nvimInstance.command(command)
+            return True
+        except:
+            return False
+
+    def getMode(self):
+        return self.nvimInstance.eval("mode()")
+
+    def getRegister(self, register):
+        command = ":echo @{}".format(register)
+        try:
+            return self.nvimInstance.command_output(command)
+        except:
+            return False
 
     def feedString(self, commands):
         for c in commands:
@@ -35,8 +74,12 @@ class V:
             yield line
 
     def cleanUp(self):
-        exitCommands = ":q!" + literals.enter
-        if self.fileName:
-            exitCommands = ":wq!" + literals.chr(13)
+        if self.getMode() == "i":
+            self.nvimInstance.input(keys.esc)
 
+        exitCommands = ":q!" + keys.enter
+        if self.fileName:
+            exitCommands = ":wq!" + keys.chr(13)
+
+        #self.nvimInstance.quit(exitCommands)
         self.nvimInstance.input(exitCommands)
