@@ -4,17 +4,18 @@ singleI = chr(139)
 
 vKeys = ['q', singleI]
 
-def runQ(vimInstance, key):
+def runQ(V, key):
     if key.previousInt != 0:
-        command = ":let @q='{}'".format(key.args[0])
-        vimInstance.command(command)
+        #command = ":let @q='{}'".format(key.args[0])
+        #V.command(command)
+        V.setRegister("q", key.args[0])
         macroPlayback = str(key.previousInt) + "@q"
-        vimInstance.input(macroPlayback)
+        V.nvimInstance.input(macroPlayback)
     else:
-        vimInstance.input('q')
+        V.nvimInstance.input('q')
 
-def runSingleI(vimInstance, key):
-    vimInstance.input("i" + key.args[0] + esc)
+def runSingleI(V, key):
+    V.nvimInstance.input("i" + key.args[0] + esc)
 
 #unmodified = ['\x00', '\x01', '\x02', '\x03', '\x04', '\x05', '\x06', '\x07', '\x08', 
 #'\t', '\n', '\x0b', '\x0c', '\r', '\x0e', '\x0f', '\x10', '\x11', '\x12', '\x13', '\x14', 
@@ -75,5 +76,5 @@ class key:
     def ready(self):
         return self.validKey and len(self.args) == len(self.argsNeeded)
 
-    def run(self, vimInstance):
-        self.keyFunc(vimInstance, self)
+    def run(self, vInstance):
+        self.keyFunc(vInstance, self)

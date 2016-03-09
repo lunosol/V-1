@@ -43,12 +43,12 @@ class V:
                 self.pendingCommand = keys.key(key, self.pendingNumber)
 
         if self.pendingCommand != None and self.pendingCommand.ready():
-            self.pendingCommand.run(self.nvimInstance)
+            self.pendingCommand.run(self)
             self.pendingCommand = None
                     
 
     def setRegister(self, register, value):
-        command = ":let {}='{}'".format(register, value)
+        command = ":let @{}='{}'".format(register, value)
         try:
             self.nvimInstance.command(command)
             return True
