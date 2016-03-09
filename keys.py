@@ -1,8 +1,9 @@
 enter = chr(13)
 esc = chr(27)
 singleI = chr(139)
+asNum = chr(140)
 
-vKeys = ['q', singleI]
+vKeys = ['q', singleI, asNum]
 
 def runQ(V, key):
     if key.previousInt != 0:
@@ -17,15 +18,9 @@ def runQ(V, key):
 def runSingleI(V, key):
     V.nvimInstance.input("i" + key.args[0] + esc)
 
-#unmodified = ['\x00', '\x01', '\x02', '\x03', '\x04', '\x05', '\x06', '\x07', '\x08', 
-#'\t', '\n', '\x0b', '\x0c', '\r', '\x0e', '\x0f', '\x10', '\x11', '\x12', '\x13', '\x14', 
-#'\x15', '\x16', '\x17', '\x18', '\x19', '\x1a', '\x1b', '\x1c', '\x1d', '\x1e', '\x1f', 
-#' ', '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', 
-#':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C', 
-#'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 
-#'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 
-#'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
-#'{', '|', '}', '~', '\x7f']
+def runAsNumber(V, key):
+    number = V.getRegister(key.args[0])
+    V.nvimInstance.input(number)
 
 argAccepted = 1
 argNotAccepted = 2
@@ -50,6 +45,12 @@ class key:
             self.args = []
             self.keyFunc = runSingleI
 
+        elif key == asNum:
+            self.endKey = ""
+            self.argsNeeded = ["text"]
+            self.args = []
+            self.keyFunc = runAsNum
+
         else:
             self.validKey = False
 
@@ -61,17 +62,30 @@ class key:
     def addArg(self, arg):
         numArgs = len(self.args)
         nextArgType = self.argsNeeded[numArgs]
+        
         if nextArgType == "singleChar":
-            self.args += arg
-            return argAccepted
-        if nextArgType == "endkey":
-            if arg == self.endKey:
-                self.args.append(self.pendingArgument)
-                self.pendingArgument = ""
-                return argAccepted
+            returnVal = argAccepted
+        elif nextArgType == "text":
+            if len(arg) == 2:
+                if arg[0] == '"' and arg[1].isalpha():
+                    returnVal = argAccepted
+            elif len(arg) < 2:
+                returnVal = argPending
             else:
-                self.pendingArgument += arg 
-                return argPending
+                returnVal = argNotAccepted
+        elif nextArgType == "endkey":
+            if arg == self.endKey:
+                returnVal = argAccepted
+            else:
+                returnVal = argPending
+
+        if returnVal == argAccepted:
+            self.args.append(self.pendingArgument)
+            self.pendingArgument = ""
+        elif returnVal == argPending:
+            self.pendingArgument += arg
+            
+        return returnVal
 
     def ready(self):
         return self.validKey and len(self.args) == len(self.argsNeeded)
