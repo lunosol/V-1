@@ -20,7 +20,8 @@ def getNvim():
 def callNvim():
     if os.path.exists("/tmp/nvim"):
         os.remove("/tmp/nvim")
-    arg = "$TERM -e 'bash -c ./neovim.sh'"
+    #arg = "$TERM -e 'bash -c ./neovim.sh'"
+    arg = "$TERM -e 'bash -c nvim'"
     os.system(arg)
 
 def welcomeMessage():
