@@ -7,10 +7,12 @@ import threading
 
 class V:
     def __init__(self, secondaryFileName):
-        nvimLauncherThread = threading.Thread(target=self.__callNvim__) #Launch nvim in new thread so that V doesn't hang
-        nvimLauncherThread.start()
-        time.sleep(1)
-        self.nvimInstance = neovim.attach("socket", path="/tmp/nvim")
+        #nvimLauncherThread = threading.Thread(target=self.__callNvim__) #Launch nvim in new thread so that V doesn't hang
+        #nvimLauncherThread.start()
+        #time.sleep(1)
+        #self.nvimInstance = neovim.attach("socket", path="/tmp/nvim")
+        os.system("whoami")
+        self.nvimInstance = neovim.attach("child", argv=["/usr/bin/nvim", "--embed"])
         self.fileName = secondaryFileName
 
         self.pendingNumber = ""
