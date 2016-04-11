@@ -8,21 +8,8 @@ import time
 import os
 import sys
 
-def setupNvim():
-    nvimLauncherThread = threading.Thread(target=callNvim)
-    nvimLauncherThread.start()
-    time.sleep(1)
-    return nvimLauncherThread
-
 def getNvim():
-    return neovim.attach("socket", path="/tmp/nvim")
-
-def callNvim():
-    if os.path.exists("/tmp/nvim"):
-        os.remove("/tmp/nvim")
-    #arg = "$TERM -e 'bash -c ./neovim.sh'"
-    arg = "$TERM -e 'bash -c nvim'"
-    os.system(arg)
+    return neovim.attach("child", argv=["/bin/env/", "nvim", "--embed"])
 
 def welcomeMessage():
     print("Hi, welcome to V!\nUsage:\n\tv [file.v]\n\tv [file.v] [secondaryFile.txt])")
