@@ -11,16 +11,16 @@ class V:
         #nvimLauncherThread.start()
         #time.sleep(1)
         #self.nvimInstance = neovim.attach("socket", path="/tmp/nvim")
-        os.system("whoami")
-        self.nvimInstance = neovim.attach("child", argv=["/usr/bin/nvim", "--embed"])
+        if secondaryFileName:
+            self.nvimInstance = neovim.attach("child", argv=["/usr/bin/nvim", secondaryFileName, "--embed"])
+        else:
+            self.nvimInstance = neovim.attach("child", argv=["/usr/bin/nvim", "--embed"])
+
         self.fileName = secondaryFileName
 
         self.pendingNumber = ""
         self.pendingCommand = None
 
-        if self.fileName:
-            self.nvimInstance.input(":e! " + secondaryFileName + chr(13))
-       
     def __callNvim__(self):
         if os.path.exists("/tmp/nvim"):
             os.remove("/tmp/nvim")
@@ -81,7 +81,7 @@ class V:
 
         exitCommands = ":q!" + keys.enter
         if self.fileName:
-            exitCommands = ":wq!" + keys.chr(13)
+            exitCommands = ":wq!" + keys.enter
 
         #self.nvimInstance.quit(exitCommands)
         self.nvimInstance.input(exitCommands)

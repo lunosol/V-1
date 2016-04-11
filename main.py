@@ -8,9 +8,6 @@ import time
 import os
 import sys
 
-def getNvim():
-    return neovim.attach("child", argv=["/bin/env/", "nvim", "--embed"])
-
 def welcomeMessage():
     print("Hi, welcome to V!\nUsage:\n\tv [file.v]\n\tv [file.v] [secondaryFile.txt])")
 
@@ -39,7 +36,7 @@ def main():
 
     for line in vInstance.getText():
         for char in line:
-            print(char)
+            print char
 
     vInstance.cleanUp()
 
