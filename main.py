@@ -13,6 +13,12 @@ def welcomeMessage():
 
 def main():
     args = sys.argv
+
+    external_neovim = False
+    if "-d" in args:
+        args.remove("-d")
+        external_neovim = True
+
     if len(args) < 2:
         welcomeMessage()
         return
@@ -26,7 +32,7 @@ def main():
         fileNotFoundMessage(vFile)
         return
 
-    vInstance = v.V(secondaryFile)
+    vInstance = v.V(secondaryFile, external_neovim)
 
     with open(vFile) as source:
         for line in source:

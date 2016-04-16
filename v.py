@@ -6,15 +6,18 @@ import time
 import threading
 
 class V:
-    def __init__(self, secondaryFileName):
-        #nvimLauncherThread = threading.Thread(target=self.__callNvim__) #Launch nvim in new thread so that V doesn't hang
-        #nvimLauncherThread.start()
-        #time.sleep(1)
-        #self.nvimInstance = neovim.attach("socket", path="/tmp/nvim")
-        if secondaryFileName:
-            self.nvimInstance = neovim.attach("child", argv=["/usr/bin/nvim", secondaryFileName, "--embed"])
+    def __init__(self, secondaryFileName, external_neovim = False):
+        if external_neovim:
+            nvimLauncherThread = threading.Thread(target=self.__callNvim__) #Launch nvim in new thread so that V doesn't hang
+            nvimLauncherThread.start()
+            time.sleep(1)
+            self.nvimInstance = neovim.attach("socket", path="/tmp/nvim")
+
         else:
-            self.nvimInstance = neovim.attach("child", argv=["/usr/bin/nvim", "--embed"])
+            if secondaryFileName:
+                self.nvimInstance = neovim.attach("child", argv=["/usr/bin/nvim", secondaryFileName, "--embed"])
+            else:
+                self.nvimInstance = neovim.attach("child", argv=["/usr/bin/nvim", "--embed"])
 
         self.fileName = secondaryFileName
 
@@ -27,7 +30,7 @@ class V:
     def __callNvim__(self):
         if os.path.exists("/tmp/nvim"):
             os.remove("/tmp/nvim")
-        arg = "$TERM -e 'bash -c ./neovim.sh'"
+        arg = "$TERM -e 'NVIM_LISTEN_ADDRESS=/tmp/nvim /usr/bin/nvim'"
         os.system(arg)
     
     def keyStroke(self, key):
