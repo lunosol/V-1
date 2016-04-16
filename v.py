@@ -19,6 +19,9 @@ class V:
         self.fileName = secondaryFileName
 
         self.pendingNumber = ""
+        self.recorded_text = ""
+        self.loop_symbol = ""
+        self.recording = False
         self.pendingCommand = None
 
     def __callNvim__(self):
@@ -28,26 +31,24 @@ class V:
         os.system(arg)
     
     def keyStroke(self, key):
-        if self.pendingCommand != None:
-            result = self.pendingCommand.addArg(key)
-
-        else:
-            if key.isdigit():
-                self.pendingNumber += key
+        if self.recording:
+            if key == self.loop_symbol:
+                self.recording = False
+                function_index = keys.loop_keys.index(key)
+                keys.loop_functions[function_index](self)
                 
-            elif key not in keys.vKeys:
-                if self.pendingNumber != "":
-                    self.nvimInstance.input(self.pendingNumber)
-                    self.pendingNumber = ""
-                self.nvimInstance.input(key)
-        
             else:
-                self.pendingCommand = keys.key(key, self.pendingNumber)
-
-        if self.pendingCommand != None and self.pendingCommand.ready():
-            self.pendingCommand.run(self)
-            self.pendingCommand = None
-                    
+                self.recorded_text += key
+        elif key.isdigit():
+            self.pendingNumber += key
+        elif key in keys.loop_keys:
+            self.recording = True
+            self.loop_symbol = key
+        elif key in keys.normal_keys:
+            keys.function_list[key](self)
+        else:
+            self.nvimInstance.input(self.pendingNumber + key)
+            self.pendingNumber = ""
 
     def setRegister(self, register, value):
         command = ":let @{}='{}'".format(register, value)
@@ -66,10 +67,6 @@ class V:
             return self.nvimInstance.command_output(command)
         except:
             return False
-
-    def feedString(self, commands):
-        for c in commands:
-            self.keyStroke(c)
 
     def getText(self):
         for line in self.nvimInstance.buffers:
