@@ -25,7 +25,7 @@ class V:
         self.recorded_text = ""
         self.loop_symbol = ""
         self.recording = False
-        self.pending_command = None
+        self.pending_command = ""
         self.keys_sent = []
 
     def __call_nvim__(self):
@@ -46,11 +46,13 @@ class V:
                 self.recorded_text += key
         elif key.isdigit():
             self.pending_number += key
+        elif self.pending_command != "" or key in keys.normal_keys:
+            self.pending_command += key
+            function_index = keys.normal_keys.index(self.pending_command[:1])
+            keys.normal_functions[function_index](self)
         elif key in keys.loop_keys:
             self.recording = True
             self.loop_symbol = key
-        elif key in keys.normal_keys:
-            keys.function_list[key](self)
         else:
             self.nvim_instance.input(self.pending_number + key)
             self.pending_number = ""
