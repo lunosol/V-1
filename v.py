@@ -15,9 +15,9 @@ class V:
 
         else:
             if secondary_file_name:
-                self.nvim_instance = neovim.attach("child", argv=["/usr/bin/nvim", secondary_file_name, "--embed"])
+                self.nvim_instance = neovim.attach("child", argv=["/usr/bin/nvim", "-i", "NONE", "-u", "NONE", secondary_file_name, "--embed"])
             else:
-                self.nvim_instance = neovim.attach("child", argv=["/usr/bin/nvim", "--embed"])
+                self.nvim_instance = neovim.attach("child", argv=["/usr/bin/nvim", "-i", "NONE", "-u", "NONE", "--embed"])
 
         self.file_name = secondary_file_name
 
@@ -26,6 +26,7 @@ class V:
         self.loop_symbol = ""
         self.recording = False
         self.pending_command = None
+        self.keys_sent = []
 
     def __call_nvim__(self):
         if os.path.exists("/tmp/nvim"):
@@ -34,6 +35,7 @@ class V:
         os.system(arg)
     
     def key_stroke(self, key):
+        self.keys_sent.append(key)
         if self.recording:
             if key == self.loop_symbol:
                 self.recording = False
@@ -75,16 +77,17 @@ class V:
         for line in self.nvim_instance.buffers:
             yield line
 
-    def clean_up(self):
-        if self.get_mode() == "i":
-            self.nvim_instance.input(keys.esc)
-
-        if self.recording:
-            self.key_stroke(self.loop_symbol)
-
+    def close(self):
         exit_commands = ":q!" + keys.enter
         if self.file_name:
             exit_commands = ":wq!" + keys.enter
 
-        #self.nvim_instance.quit(exit_commands)
         self.nvim_instance.input(exit_commands)
+
+
+    def clean_up(self):
+        if self.get_mode() == "i":
+            self.key_stroke(keys.esc)
+
+        if self.recording:
+            self.key_stroke(self.loop_symbol)

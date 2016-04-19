@@ -30,16 +30,24 @@ def main():
 
     v_instance = v.V(has_secondary_file, external_neovim)
 
+    reg = ord('a')
+    for i in args["ARGUMENTS"]:
+        v_instance.set_register(chr(reg), i)
+        reg += 1
+
     with open(source_file) as source:
         for line in source:
             for char in line:
                 v_instance.key_stroke(char)
 
+    v_instance.clean_up()
+
     for line in v_instance.get_text():
         for char in line:
             print char
 
-    v_instance.clean_up()
+    v_instance.close()
+
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="V alpha 0.1")
