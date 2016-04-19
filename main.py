@@ -1,6 +1,7 @@
 """Usage: 
   main.py FILE [ARGUMENTS ... ]
-  main.py FILE [-d | --f=file] [ARGUMENTS ... ]
+  main.py FILE [options] [ARGUMENTS ... ]
+  main.py FILE [ARGUMENTS ... ] [options]
 
 Options:
   -h --help     Show this screen.
@@ -13,6 +14,7 @@ import keys
 
 from docopt import docopt
 import neovim
+import rc
 import subprocess
 import threading
 import time
@@ -29,6 +31,8 @@ def main():
         return
 
     v_instance = v.V(has_secondary_file, external_neovim)
+
+    rc.source(v_instance)
 
     reg = ord('a')
     for i in args["ARGUMENTS"]:

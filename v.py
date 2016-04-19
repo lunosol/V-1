@@ -7,6 +7,9 @@ import threading
 
 class V:
     def __init__(self, secondary_file_name, external_neovim = False):
+        self.external_neovim = external_neovim
+        self.secondary_file_name = secondary_file_name
+
         if external_neovim:
             nvim_launcher_thread = threading.Thread(target=self.__call_nvim__) #Launch nvim in new thread so that V doesn't hang
             nvim_launcher_thread.start()
@@ -31,7 +34,7 @@ class V:
     def __call_nvim__(self):
         if os.path.exists("/tmp/nvim"):
             os.remove("/tmp/nvim")
-        arg = "$TERM -e 'NVIM_LISTEN_ADDRESS=/tmp/nvim /usr/bin/nvim'"
+        arg = "$TERM -e 'NVIM_LISTEN_ADDRESS=/tmp/nvim /usr/bin/nvim -i NONE -u NONE {}'".format(self.secondary_file_name)
         os.system(arg)
     
     def key_stroke(self, key):
@@ -44,8 +47,6 @@ class V:
                 
             else:
                 self.recorded_text += key
-        elif key.isdigit():
-            self.pending_number += key
         elif self.pending_command != "" or key in keys.normal_keys:
             self.pending_command += key
             function_index = keys.normal_keys.index(self.pending_command[:1])
@@ -53,6 +54,8 @@ class V:
         elif key in keys.loop_keys:
             self.recording = True
             self.loop_symbol = key
+        elif key.isdigit():
+            self.pending_number += key
         else:
             self.nvim_instance.input(self.pending_number + key)
             self.pending_number = ""
@@ -80,11 +83,9 @@ class V:
             yield line
 
     def close(self):
-        exit_commands = ":q!" + keys.enter
-        if self.file_name:
-            exit_commands = ":wq!" + keys.enter
-
-        self.nvim_instance.input(exit_commands)
+        if not self.external_neovim:
+            exit_commands = ":q!" + keys.enter
+            self.nvim_instance.input(exit_commands)
 
 
     def clean_up(self):
