@@ -25,21 +25,21 @@ def main():
     source_file = args['FILE']
 
     if not os.path.exists(source_file):
-        fileNotFoundMessage(source_file)
+        file_not_found_message(source_file)
         return
 
-    vInstance = v.V(has_secondary_file, external_neovim)
+    v_instance = v.V(has_secondary_file, external_neovim)
 
     with open(source_file) as source:
         for line in source:
             for char in line:
-                vInstance.keyStroke(char)
+                v_instance.key_stroke(char)
 
-    for line in vInstance.getText():
+    for line in v_instance.get_text():
         for char in line:
             print char
 
-    vInstance.cleanUp()
+    v_instance.clean_up()
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="V alpha 0.1")
