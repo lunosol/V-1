@@ -6,7 +6,7 @@ import time
 import threading
 
 class V:
-    def __init__(self, secondary_file_name, external_neovim = False):
+    def __init__(self, secondary_file_name, external_neovim, platform):
         self.external_neovim = external_neovim
         self.secondary_file_name = secondary_file_name
 
@@ -17,10 +17,15 @@ class V:
             self.nvim_instance = neovim.attach("socket", path="/tmp/nvim")
 
         else:
+            if platform == "Windows":
+                path = "C:\\Neovim\\bin\\nvim.exe"
+            elif platform == "Linux":
+                path = "/usr/bin/nvim"
+
             if secondary_file_name:
-                self.nvim_instance = neovim.attach("child", argv=["/usr/bin/nvim", "-i", "NONE", "-u", "NONE", secondary_file_name, "--embed"])
+                self.nvim_instance = neovim.attach("child", argv=[path, "-i", "NONE", "-u", "NONE", secondary_file_name, "--embed"])
             else:
-                self.nvim_instance = neovim.attach("child", argv=["/usr/bin/nvim", "-i", "NONE", "-u", "NONE", "--embed"])
+                self.nvim_instance = neovim.attach("child", argv=[path, "-i", "NONE", "-u", "NONE", "--embed"])
 
         self.file_name = secondary_file_name
 

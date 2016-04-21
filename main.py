@@ -18,6 +18,7 @@ import rc
 import subprocess
 import threading
 import time
+import platform
 import os
 import sys
 
@@ -30,7 +31,7 @@ def main():
         file_not_found_message(source_file)
         return
 
-    v_instance = v.V(has_secondary_file, external_neovim)
+    v_instance = v.V(has_secondary_file, external_neovim, platform.system())
 
     rc.source(v_instance)
 
