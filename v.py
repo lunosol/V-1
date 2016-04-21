@@ -74,7 +74,7 @@ class V:
     def get_register(self, register):
         command = ":echo @{}".format(register)
         try:
-            return self.nvim_instance.command_output(command)
+            return self.nvim_instance.command_output(command)[1:]
         except:
             return False
 
