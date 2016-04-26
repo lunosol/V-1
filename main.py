@@ -26,12 +26,13 @@ def main():
     has_secondary_file = args['--f']
     external_neovim = args['-d']
     source_file = args['FILE']
+    args["platform"] = platform.system()
 
     if not os.path.exists(source_file):
         file_not_found_message(source_file)
         return
 
-    v_instance = v.V(has_secondary_file, external_neovim, platform.system())
+    v_instance = v.V(args)
 
     rc.source(v_instance)
 
