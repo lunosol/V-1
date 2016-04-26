@@ -2,6 +2,7 @@ import neovim
 import keys
 
 import os
+import os_code
 import time
 import threading
 
@@ -11,21 +12,26 @@ class V:
         self.secondary_file_name = secondary_file_name
 
         if external_neovim:
-            nvim_launcher_thread = threading.Thread(target=self.__call_nvim__) #Launch nvim in new thread so that V doesn't hang
+            nvim_launcher_thread = threading.Thread(target=self.__call_nvim__, args=[platform, secondary_file_name]) #Launch nvim in new thread so that V doesn't hang
             nvim_launcher_thread.start()
             time.sleep(1)
-            self.nvim_instance = neovim.attach("socket", path="/tmp/nvim")
+            socket = os_code.get_socket_path(platform)
+            self.nvim_instance = neovim.attach("socket", path=socket)
 
         else:
-            if platform == "Windows":
-                path = "C:\\Neovim\\bin\\nvim.exe"
-            elif platform == "Linux":
-                path = "/usr/bin/nvim"
+#            if platform == "Windows":
+#                path = "C:\\Neovim\\bin\\nvim.exe"
+#            elif platform == "Linux":
+#                path = "/usr/bin/nvim"
 
-            if secondary_file_name:
-                self.nvim_instance = neovim.attach("child", argv=[path, "-i", "NONE", "-u", "NONE", secondary_file_name, "--embed"])
-            else:
-                self.nvim_instance = neovim.attach("child", argv=[path, "-i", "NONE", "-u", "NONE", "--embed"])
+            args = os_code.get_embedded_nvim_args(platform, secondary_file_name)
+            self.nvim_instance = neovim.attach("child", argv=args)
+#            if secondary_file_name:
+#                self.nvim_instance = neovim.attach("child", argv=[path, "-i", "NONE", "-u", "NONE", secondary_file_name, "--embed"])
+#            else:
+#                self.nvim_instance = neovim.attach("child", argv=[path, "-i", "NONE", "-u", "NONE", "--embed"])
+
+            
 
         self.file_name = secondary_file_name
 
@@ -36,10 +42,13 @@ class V:
         self.pending_command = ""
         self.keys_sent = []
 
-    def __call_nvim__(self):
-        if os.path.exists("/tmp/nvim"):
-            os.remove("/tmp/nvim")
-        arg = "$TERM -e 'NVIM_LISTEN_ADDRESS=/tmp/nvim /usr/bin/nvim -i NONE -u NONE {}'".format(self.secondary_file_name)
+    def __call_nvim__(self, platform, secondary_file_name):
+        socket = os_code.get_socket_path(platform)
+#        if os.path.exists(socket):
+#            os.remove(socket)
+
+        arg = os_code.get_external_nvim_command(platform, secondary_file_name)
+        #arg = "$TERM -e 'NVIM_LISTEN_ADDRESS=/tmp/nvim /usr/bin/nvim -i NONE -u NONE {}'".format(self.secondary_file_name)
         os.system(arg)
     
     def key_stroke(self, key):
