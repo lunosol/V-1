@@ -23,6 +23,7 @@ def get_external_nvim_command(platform, secondary_file_path):
         #command = "START C:\\users\\jmhjr\\Desktop\\nvim-qt\\nvim-qt.exe \i NONE \d NONE {}"
         command = "START nvim-qt.exe \i NONE \d NONE {}"
     elif platform == "Linux":
-        command = "$TERM -e '/usr/bin/nvim -i NONE -d NONE {}'"
+        #command = "$TERM -e '/usr/bin/nvim -i NONE -d NONE {}'"
+        command = "$TERM -e 'nvim -i NONE -d NONE {}'"
 
     return command.format(secondary_file_path)
