@@ -2,9 +2,11 @@ import neovim
 import keys
 
 import os
+import sys
 import os_code
 import time
 import threading
+from trollius import py33_exceptions
 
 class V:
     def __init__(self, args):
@@ -15,11 +17,20 @@ class V:
             nvim_launcher_thread.start()
             time.sleep(1)
             socket = os_code.get_socket_path(args["platform"])
-            self.nvim_instance = neovim.attach("socket", path=socket)
+
+            try:
+                self.nvim_instance = neovim.attach("socket", path=socket)
+            except py33_exceptions.FileNotFoundError:
+                sys.stderr.write("Couldn't connect to nvim. Did you export your NVIM_LIST_ADDRESS?\n\n")
+                sys.exit()
 
         else:
-            args = os_code.get_embedded_nvim_args(args["platform"], args["--f"])
-            self.nvim_instance = neovim.attach("child", argv=args)
+            args = os_code.get_embedded_nvim_args(args["platform"], args["-f"], args["-w"])
+            try:
+                self.nvim_instance = neovim.attach("child", argv=args)
+            except py33_exceptions.FileNotFoundError:
+                sys.stderr.write("Couldn't find the neovim executable! Is nvim in your $PATH?\n\n")
+                sys.exit()
             
         self.pending_number = ""
         self.recorded_text = ""
@@ -30,12 +41,10 @@ class V:
 
     def __call_nvim__(self):
         socket = os_code.get_socket_path(self.args["platform"])
-#        if os.path.exists(socket):
-#            os.remove(socket)
 
-        arg = os_code.get_external_nvim_command(self.args["platform"], self.args["--f"])
-        #arg = "$TERM -e 'NVIM_LISTEN_ADDRESS=/tmp/nvim /usr/bin/nvim -i NONE -u NONE {}'".format(self.secondary_file_name)
+        arg = os_code.get_external_nvim_command(self.args["platform"], self.args["-f"], self.args['-w'])
         os.system(arg)
+
     
     def key_stroke(self, key):
         self.keys_sent.append(key)

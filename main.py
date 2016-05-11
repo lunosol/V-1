@@ -6,7 +6,8 @@
 Options:
   -h --help     Show this screen.
   -d            Debug mode. Opens in a visible nvim window
-  --f=FILE      Open on FILE      
+  -f FILE       Open on FILE      
+  -w FILE       Log vim keystrokes in FILE
 """
 
 import v
@@ -23,7 +24,7 @@ import os
 import sys
 
 def main():
-    has_secondary_file = args['--f']
+    has_secondary_file = args['-f']
     external_neovim = args['-d']
     source_file = args['FILE']
     args["platform"] = platform.system()
