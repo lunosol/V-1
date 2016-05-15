@@ -77,13 +77,6 @@ def run_M_D(V):
     V.pending_command = ''
     V.pending_number = ''
 
-def run_M_L(V):
-    #Select (l)ine. Originally I wanted a `dil` command (Delete In Line), but then I realised 
-    #visually selecting the line is essentially the same thing.
-    V.nvim_instance.input("0v$")
-    V.pending_number = ""
-    V.pending_command = ""
-
 def M_r_loop(v):
     #Similar to <M_q>, but `@q` is added to the end of the macro, making it recursive.
     v.recorded_text += "@q"
@@ -94,15 +87,14 @@ def M_r_loop(v):
     v.nvim_instance.input(command)
 
 M_D = chr(196)
-M_L = chr(204)
 M_a = chr(225)
 M_d = chr(228)
 M_l = chr(236)
 M_q = chr(241)
 M_r = chr(242)
 
-normal_keys = [M_D, M_L, M_a, M_d, M_i, '@']
-normal_functions = [run_M_D, run_M_L, run_M_a, run_M_d, run_M_i, run_at]
+normal_keys = [M_D, M_a, M_d, M_i, '@']
+normal_functions = [run_M_D, run_M_a, run_M_d, run_M_i, run_at]
 
 loop_keys = [M_q, M_r]
 loop_functions = [M_q_loop, M_r_loop]
