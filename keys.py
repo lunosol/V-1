@@ -34,7 +34,13 @@ def run_M_d(V):
         movement = V.pending_command[-1]
         if ord(movement) < 128:
             V.nvim_instance.input(movement)
-            mode = V.get_mode()
+
+            #The neovim python client has a bug, where it fails to evaluate mode if a number is pending.
+            if movement.isdigit() and not movement == 0:
+                mode = "no"
+            else:
+                mode = V.get_mode()
+
             if mode == 'n':
                 #Movement successful, exit the V command
                 #full_movement = V.pending_command[1:]
@@ -66,7 +72,10 @@ def run_at(V):
 
 def run_M_D(V):
     #Duplicate line. Literally the same as <M_d><M_d> or <M_d>y
-    V.nvim_instance.input("Yp")
+    command = "Y{}P".format(V.pending_number)
+    V.nvim_instance.input(command)
+    V.pending_command = ''
+    V.pending_number = ''
 
 def run_M_L(V):
     #Select (l)ine. Originally I wanted a `dil` command (Delete In Line), but then I realised 
