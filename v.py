@@ -32,6 +32,7 @@ class V:
                 sys.stderr.write("Couldn't find the neovim executable! Is nvim in your $PATH?\n\n")
                 sys.exit()
             
+        self.active_reg = "a"
         self.pending_number = ""
         self.recorded_text = ""
         self.loop_symbol = ""

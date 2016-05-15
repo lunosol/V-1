@@ -2,6 +2,16 @@ enter = chr(13)
 esc = chr(27)
 M_i = chr(233) 
 
+def run_M_at(v):
+    reg = v.active_reg
+    v.active_reg = chr(ord(reg) + 1)
+    v.pending_command = ""
+    if v.get_register(reg) == "":
+        v.nvim_instance.input(chr(129))     #Keystrokes above ascii 128 cause a 'ding', thus breaking the current loop (if any)
+    else:
+        v.key_stroke("@")
+        v.key_stroke(reg)
+
 def M_q_loop(v):
     #Macro playback. Puts all the text between the two M_q chars, and stuffs it in 
     #'@q'. Then, if there is a pending number, it plays it back that many times.
@@ -86,6 +96,7 @@ def M_r_loop(v):
     v.recorded_text = ""
     v.nvim_instance.input(command)
 
+M_at = chr(192)
 M_D = chr(196)
 M_a = chr(225)
 M_d = chr(228)
@@ -93,8 +104,8 @@ M_l = chr(236)
 M_q = chr(241)
 M_r = chr(242)
 
-normal_keys = [M_D, M_a, M_d, M_i, '@']
-normal_functions = [run_M_D, run_M_a, run_M_d, run_M_i, run_at]
+normal_keys = [M_at, M_D, M_a, M_d, M_i, '@']
+normal_functions = [run_M_at, run_M_D, run_M_a, run_M_d, run_M_i, run_at]
 
 loop_keys = [M_q, M_r]
 loop_functions = [M_q_loop, M_r_loop]
