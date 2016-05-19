@@ -1,36 +1,38 @@
-def get_embedded_nvim_args(platform, secondary_file_path, log_file):
-    if platform == "Windows":
-        args = ["nvim.exe", "-i", "NONE", "-u", "NONE"]
-    elif platform == "Linux":
-        args = ["/usr/bin/nvim", "-i", "NONE", "-u", "NONE"]
+def get_embedded_nvim_args(args):
+    if args["platform"] == "Windows":
+        nvim_args = ["nvim.exe", "-i", "NONE", "-u", "NONE"]
+    elif args["platform"] == "Linux":
+        nvim_args = ["/usr/bin/nvim", "-i", "NONE", "-u", "NONE"]
 
-    if log_file:
-        args += ['-W', log_file]
-    if secondary_file_path:
-        args += [secondary_file_path]
+    if args["-w"]:
+        nvim_args += ['-W', args["-w"]]
+    if args["-f"]:
+        nvim_args += [args["-f"]]
+    if args["--safe"]:
+        nvim_args += [args["-Z"]]
 
-    args += ["--embed"]
+    nvim_args += ["--embed"]
 
-    return args
+    return nvim_args
 
-def get_socket_path(platform):
-    if platform == "Windows":
+def get_socket_path(args):
+    if args["platform"] == "Windows":
         return "\\\\.\\pipe\\nvim"
-    elif platform == "Linux":
+    elif args["platform"] == "Linux":
         return "/tmp/nvim"
 
-def get_external_nvim_command(platform, secondary_file_path, log_file):
-    if platform == "Windows":
+def get_external_nvim_command(args):
+    if args["platform"] == "Windows":
         #command = "START C:\\users\\jmhjr\\Desktop\\nvim-qt\\nvim-qt.exe \i NONE \u NONE {}"
         command = "START nvim-qt.exe \i NONE \u NONE {}"
-    elif platform == "Linux":
+    elif args["platform"] == "Linux":
         #command = "$TERM -e '/usr/bin/nvim -i NONE -u NONE {}'"
         command = "$TERM -e 'nvim -i NONE -u NONE "
 
-    if log_file:
-        command += '-W log_file '
-    if secondary_file_path:
-        command += "-f {} ".format(secondary_file_path)
+    if args["-w"]:
+        command += '-W args["-w"] '
+    if args["-f"]:
+        command += "-f {} ".format(args["-f"])
 
     command += "'"
 

@@ -16,7 +16,7 @@ class V:
             nvim_launcher_thread = threading.Thread(target=self.__call_nvim__) #Launch nvim in new thread so that V doesn't hang
             nvim_launcher_thread.start()
             time.sleep(1)
-            socket = os_code.get_socket_path(args["platform"])
+            socket = os_code.get_socket_path(args)
 
             try:
                 self.nvim_instance = neovim.attach("socket", path=socket)
@@ -25,7 +25,7 @@ class V:
                 sys.exit()
 
         else:
-            args = os_code.get_embedded_nvim_args(args["platform"], args["-f"], args["-w"])
+            args = os_code.get_embedded_nvim_args(args)
             try:
                 self.nvim_instance = neovim.attach("child", argv=args)
             except py33_exceptions.FileNotFoundError:
@@ -41,9 +41,9 @@ class V:
         self.keys_sent = []
 
     def __call_nvim__(self):
-        socket = os_code.get_socket_path(self.args["platform"])
+        socket = os_code.get_socket_path(self.args)
 
-        arg = os_code.get_external_nvim_command(self.args["platform"], self.args["-f"], self.args['-w'])
+        arg = os_code.get_external_nvim_command(self.args)
         os.system(arg)
 
     

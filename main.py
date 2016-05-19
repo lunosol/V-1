@@ -8,6 +8,7 @@ Options:
   -d            Debug mode. Opens in a visible nvim window
   -f FILE       Open on FILE      
   -w FILE       Log vim keystrokes in FILE
+  --safe        Do not allow shell access
 """
 
 import v
