@@ -1,6 +1,6 @@
 enter = chr(13)
 esc = chr(27)
-M_i = chr(233) 
+M_i = chr(233)
 
 def run_M_at(v):
     reg = v.active_reg
@@ -13,7 +13,7 @@ def run_M_at(v):
         v.key_stroke(reg)
 
 def M_q_loop(v):
-    #Macro playback. Puts all the text between the two M_q chars, and stuffs it in 
+    #Macro playback. Puts all the text between the two M_q chars, and stuffs it in
     #'@q'. Then, if there is a pending number, it plays it back that many times.
     v.set_register('q', v.recorded_text)
     command = "{}@q".format(v.pending_number)
@@ -38,7 +38,7 @@ def run_M_a(V):
         V.pending_number = ""
 
 def run_M_d(V):
-    #Duplicate. Takes a 'motion' argument, yanks that motion, moves forward 
+    #Duplicate. Takes a 'motion' argument, yanks that motion, moves forward
     #that motion, then (p)uts. So `<M_d>w` means (d)uplicate (w)ord.
     if len(V.pending_command) > 1:
         movement = V.pending_command[-1]
@@ -66,7 +66,7 @@ def run_M_d(V):
                 V.nvim_instance.input("yp")
     else:
         V.nvim_instance.input("y")
-                
+
 
 def run_at(V):
     #At. Playback of macros. Only overridden so that we can capture "number" macros,
@@ -104,9 +104,17 @@ M_l = chr(236)
 M_q = chr(241)
 M_r = chr(242)
 
-normal_keys = [M_at, M_D, M_a, M_d, M_i, '@']
-normal_functions = [run_M_at, run_M_D, run_M_a, run_M_d, run_M_i, run_at]
+normal_dict = {
+M_at: run_M_at,
+M_D: run_M_D,
+M_a: run_M_a,
+M_d: run_M_d,
+M_i: run_M_i,
+'@': run_M_at,
+}
 
-loop_keys = [M_q, M_r]
-loop_functions = [M_q_loop, M_r_loop]
+loop_dict = {
+M_q: M_q_loop,
+M_r: M_r_loop,
+}
 

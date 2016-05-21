@@ -31,7 +31,7 @@ class V:
             except py33_exceptions.FileNotFoundError:
                 sys.stderr.write("Couldn't find the neovim executable! Is nvim in your $PATH?\n\n")
                 sys.exit()
-            
+
         self.active_reg = "a"
         self.pending_number = ""
         self.recorded_text = ""
@@ -46,22 +46,22 @@ class V:
         arg = os_code.get_external_nvim_command(self.args)
         os.system(arg)
 
-    
+
     def key_stroke(self, key):
         self.keys_sent.append(key)
         if self.recording:
             if key == self.loop_symbol:
                 self.recording = False
-                function_index = keys.loop_keys.index(key)
-                keys.loop_functions[function_index](self)
-                
+                function = keys.loop_dict[key]
+                function(self)
+
             else:
                 self.recorded_text += key
-        elif self.pending_command != "" or key in keys.normal_keys:
+        elif self.pending_command != "" or key in keys.normal_dict:
             self.pending_command += key
-            function_index = keys.normal_keys.index(self.pending_command[:1])
-            keys.normal_functions[function_index](self)
-        elif key in keys.loop_keys:
+            function = keys.normal_dict[self.pending_command[0]]
+            function(self)
+        elif key in keys.loop_dict:
             self.recording = True
             self.loop_symbol = key
         elif key.isdigit():
