@@ -59,6 +59,24 @@ def run_M_S(V):
         except neovim.api.nvim.NvimError: #Substitution not found
             pass
 
+def run_M_m(V):
+    if V.pending_command[-1:] == CR:
+        command = ":%s/" + regex.expand_regex(V.pending_command)
+        try:
+            V.nvim_instance.command(command)
+        except neovim.api.nvim.NvimError: #Substitution not found
+            print("it failed...")
+
+def run_M_M(V):
+    if V.pending_command[-1:] == CR:
+        command = ":s/" + regex.expand_regex(V.pending_command)
+        command = command[:-1]
+        command += "/g"
+        try:
+            V.nvim_instance.command(command)
+        except neovim.api.nvim.NvimError: #Substitution not found
+            pass
+
 def run_M_d(V):
     #Duplicate. Takes a 'motion' argument, yanks that motion, moves forward
     #that motion, then (p)uts. So `<M_d>w` means (d)uplicate (w)ord.
@@ -121,10 +139,12 @@ def M_r_loop(v):
 
 M_at = chr(192)
 M_D = chr(196)
+M_M = chr(205)
 M_S = chr(211)
 M_a = chr(225)
 M_d = chr(228)
 M_l = chr(236)
+M_m = chr(237)
 M_q = chr(241)
 M_r = chr(242)
 M_s = chr(243)
@@ -133,10 +153,12 @@ normal_dict = {
 M_at: run_M_at,
 M_D: run_M_D,
 M_S: run_M_S,
+M_M: run_M_M,
 M_a: run_M_a,
 M_d: run_M_d,
 M_i: run_M_i,
 M_s: run_M_s,
+M_m: run_M_m,
 '@': run_M_at,
 }
 
