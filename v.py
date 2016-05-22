@@ -94,7 +94,7 @@ class V:
 
     def close(self):
         if not self.args["-d"]:
-            exit_commands = ":q!" + keys.enter
+            exit_commands = ":q!" + keys.CR
             self.nvim_instance.input(exit_commands)
 
 
