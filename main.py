@@ -16,7 +16,6 @@ import keys
 
 from docopt import docopt
 import neovim
-import rc
 import subprocess
 import threading
 import time
@@ -35,8 +34,6 @@ def main():
         return
 
     v_instance = v.V(args)
-
-    rc.source(v_instance)
 
     reg = ord('a')
     for i in args["ARGUMENTS"]:
