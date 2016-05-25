@@ -39,6 +39,7 @@ class V:
         self.pending_number = ""
         self.recorded_text = ""
         self.loop_symbol = ""
+        self.loop_num = ""
         self.recording = False
         self.pending_command = ""
         self.keys_sent = []
@@ -52,25 +53,15 @@ class V:
 
     def key_stroke(self, key):
         self.keys_sent.append(key)
-        if self.recording:
-            if key == self.loop_symbol:
-                self.recording = False
-                function = keys.loop_dict[key]
-                function(self)
 
-            else:
-                self.recorded_text += key
-        elif self.pending_command != "" or key in keys.normal_dict:
+        if self.pending_command != "" or key in keys.normal_dict:
             self.pending_command += key
             function = keys.normal_dict[self.pending_command[0]]
             function(self)
-        elif key in keys.loop_dict:
-            self.recording = True
-            self.loop_symbol = key
         elif key.isdigit():
             self.pending_number += key
         else:
-            self.nvim_instance.input(self.pending_number + key)
+            self.input(self.pending_number + key)
             self.pending_number = ""
 
     def set_register(self, register, value):
@@ -100,6 +91,11 @@ class V:
             exit_commands = ":q!" + keys.CR
             self.nvim_instance.input(exit_commands)
 
+    def input(self, key):
+        if self.recording:
+            self.recorded_text += key
+        else:
+            self.nvim_instance.input(key)
 
     def clean_up(self):
         if self.get_mode() == "i":

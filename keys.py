@@ -11,7 +11,7 @@ def run_M_at(v):
     v.active_reg = chr(ord(reg) + 1)
     v.pending_command = ""
     if v.get_register(reg) == "":
-        v.nvim_instance.input(chr(129))     #Keystrokes above ascii 128 cause a 'ding', thus breaking the current loop (if any)
+        v.input(chr(129))     #Keystrokes above ascii 128 cause a 'ding', thus breaking the current loop (if any)
     else:
         v.key_stroke("@")
         v.key_stroke(reg)
@@ -19,17 +19,26 @@ def run_M_at(v):
 def M_q_loop(v):
     #Macro playback. Puts all the text between the two M_q chars, and stuffs it in
     #'@q'. Then, if there is a pending number, it plays it back that many times.
-    v.set_register('q', v.recorded_text)
-    command = "{}@q".format(v.pending_number)
+    if v.recording:
+        v.recording = False
+        v.set_register('q', v.recorded_text)
+        command = "{}@q".format(v.loop_num)
+        v.loop_num = ""
+        v.recorded_text = ""
+        v.input(command)
+    else:
+        v.recording = True
+        v.loop_symbol = M_q
+        v.loop_num = v.pending_number
+
     v.pending_number = ""
-    v.recorded_text = ""
-    v.nvim_instance.input(command)
+    v.pending_command = ""
 
 def run_M_i(V):
     #Single insert. Essentially `i<char><esc>` Takes one arbitrary key as an argument.
     if len(V.pending_command) > 1:
         command = "{}i{}{}".format(V.pending_number, V.pending_command[1], esc)
-        V.nvim_instance.input(command)
+        V.input(command)
         V.pending_command = ""
         V.pending_number = ""
 
@@ -37,7 +46,7 @@ def run_M_a(V):
     #Single append. The same as M_i, but inserts text *after* the cursor.
     if len(V.pending_command) > 1:
         command = "{}a{}{}".format(V.pending_number, V.pending_command[1], esc)
-        V.nvim_instance.input(command)
+        V.input(command)
         V.pending_command = ""
         V.pending_number = ""
 
@@ -45,7 +54,8 @@ def run_M_s(V):
     if V.pending_command[-1:] == CR:
         command = ":s/" + regex.expand_regex(V.pending_command)
         try:
-            V.nvim_instance.command(command)
+            V.input(command)
+            V.pending_command = ""
         except neovim.api.nvim.NvimError: #Substitution not found
             print("it failed...")
 
@@ -55,7 +65,8 @@ def run_M_S(V):
         command = command[:-1]
         command += "/g"
         try:
-            V.nvim_instance.command(command)
+            V.input(command)
+            V.pending_command = ""
         except neovim.api.nvim.NvimError: #Substitution not found
             pass
 
@@ -63,7 +74,8 @@ def run_M_m(V):
     if V.pending_command[-1:] == CR:
         command = ":%s/" + regex.expand_regex(V.pending_command)
         try:
-            V.nvim_instance.command(command)
+            V.input(command)
+            V.pending_command = ""
         except neovim.api.nvim.NvimError: #Substitution not found
             print("it failed...")
 
@@ -73,7 +85,8 @@ def run_M_M(V):
         command = command[:-1]
         command += "/g"
         try:
-            V.nvim_instance.command(command)
+            V.input(command)
+            V.pending_command = ""
         except neovim.api.nvim.NvimError: #Substitution not found
             pass
 
@@ -83,7 +96,7 @@ def run_M_d(V):
     if len(V.pending_command) > 1:
         movement = V.pending_command[-1]
         if ord(movement) < 128:
-            V.nvim_instance.input(movement)
+            V.input(movement)
 
             #The neovim python client has a bug, where it fails to evaluate mode if a number is pending.
             if movement.isdigit() and not movement == 0:
@@ -97,15 +110,15 @@ def run_M_d(V):
                 put_command = "{}P".format(V.pending_number)
                 V.pending_command = ''
                 V.pending_number = ''
-                #V.nvim_instance.input(full_movement)
-                V.nvim_instance.input(put_command)
+                #V.input(full_movement)
+                V.input(put_command)
         else:
             if movement == M_d:
                 V.pending_command = ''
                 V.pending_number = ''
-                V.nvim_instance.input("yp")
+                V.input("yp")
     else:
-        V.nvim_instance.input("y")
+        V.input("y")
 
 
 def run_at(V):
@@ -116,25 +129,34 @@ def run_at(V):
         if reg.isdigit():
             V.pending_number += reg
         else:
-            V.nvim_instance.input(V.pending_command)
+            V.input(V.pending_command)
 
         V.pending_command = ""
 
 def run_M_D(V):
     #Duplicate line. Literally the same as <M_d><M_d> or <M_d>y
     command = "Y{}P".format(V.pending_number)
-    V.nvim_instance.input(command)
+    V.input(command)
     V.pending_command = ''
     V.pending_number = ''
 
 def M_r_loop(v):
     #Similar to <M_q>, but `@q` is added to the end of the macro, making it recursive.
-    v.recorded_text += "@q"
-    v.set_register('q', v.recorded_text)
-    command = "{}@q".format(v.pending_number)
+    if v.recording:
+        v.recording = False
+        v.recorded_text += "@q"
+        v.set_register('q', v.recorded_text)
+        command = "{}@q".format(v.loop_num)
+        v.loop_num = ""
+        v.recorded_text = ""
+        v.input(command)
+    else:
+        v.recording = True
+        v.loop_num = v.pending_number
+        v.loop_symbol = M_r
+
     v.pending_number = ""
-    v.recorded_text = ""
-    v.nvim_instance.input(command)
+    v.pending_command = ""
 
 
 M_at = chr(192)
@@ -159,10 +181,8 @@ M_d: run_M_d,
 M_i: run_M_i,
 M_s: run_M_s,
 M_m: run_M_m,
-'@': run_M_at,
-}
+'@': run_at,
 
-loop_dict = {
 M_q: M_q_loop,
 M_r: M_r_loop,
 }
