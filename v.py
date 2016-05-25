@@ -1,4 +1,5 @@
 import neovim
+import docopt
 import keys
 
 import os
@@ -32,7 +33,7 @@ class V:
                 sys.stderr.write("Couldn't find the neovim executable! Is nvim in your $PATH?\n\n")
                 sys.exit()
 
-        if args["--safe"]:
+        if self.args["--safe"]:
             self.nvim_instance.command("source .nvim/safe_mode.vim")
 
         self.active_reg = "a"
