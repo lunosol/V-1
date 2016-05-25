@@ -54,7 +54,8 @@ def run_M_s(V):
     if V.pending_command[-1:] == CR:
         command = ":s/" + regex.expand_regex(V.pending_command)
         try:
-            V.nvim_instance.command(command)
+            V.input(command)
+            V.pending_command = ""
         except neovim.api.nvim.NvimError: #Substitution not found
             print("it failed...")
 
@@ -64,7 +65,8 @@ def run_M_S(V):
         command = command[:-1]
         command += "/g"
         try:
-            V.nvim_instance.command(command)
+            V.input(command)
+            V.pending_command = ""
         except neovim.api.nvim.NvimError: #Substitution not found
             pass
 
@@ -72,7 +74,8 @@ def run_M_m(V):
     if V.pending_command[-1:] == CR:
         command = ":%s/" + regex.expand_regex(V.pending_command)
         try:
-            V.nvim_instance.command(command)
+            V.input(command)
+            V.pending_command = ""
         except neovim.api.nvim.NvimError: #Substitution not found
             print("it failed...")
 
@@ -82,7 +85,8 @@ def run_M_M(V):
         command = command[:-1]
         command += "/g"
         try:
-            V.nvim_instance.command(command)
+            V.input(command)
+            V.pending_command = ""
         except neovim.api.nvim.NvimError: #Substitution not found
             pass
 

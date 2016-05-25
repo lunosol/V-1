@@ -5,11 +5,13 @@ def expand_regex(s):
     if s[-1:] not in ['\r', '\n']:
         return ""
     expanded = ""
-    for c in s[1:-1]:
+    for c in s[1:]:
         if ord(c) >= 128:
             expanded += '\\' + chr(ord(c) - 128)
         else:
             expanded += c
+
+#    expanded = expanded[:-1] + '\r'
 
     return expanded
 
