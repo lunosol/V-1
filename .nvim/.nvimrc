@@ -1,3 +1,5 @@
+set noautoindent
+
 nnoremap <M-n> :norm<space>
 nnoremap <M-N> :%norm<space>
 
