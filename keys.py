@@ -52,7 +52,7 @@ def run_M_a(V):
 
 def run_M_s(V):
     if V.pending_command[-1:] == CR:
-        command = ":s/" + regex.expand_regex(V.pending_command)
+        command = ":s/" + regex.expand_regex(V.pending_command) + CR
         try:
             V.input(command)
             V.pending_command = ""
@@ -62,8 +62,8 @@ def run_M_s(V):
 def run_M_S(V):
     if V.pending_command[-1:] == CR:
         command = ":s/" + regex.expand_regex(V.pending_command)
-        command = command[:-1]
         command += "/g"
+        command += CR
         try:
             V.input(command)
             V.pending_command = ""
@@ -72,7 +72,7 @@ def run_M_S(V):
 
 def run_M_m(V):
     if V.pending_command[-1:] == CR:
-        command = ":%s/" + regex.expand_regex(V.pending_command)
+        command = ":%s/" + regex.expand_regex(V.pending_command) + CR
         try:
             V.input(command)
             V.pending_command = ""
@@ -82,8 +82,8 @@ def run_M_m(V):
 def run_M_M(V):
     if V.pending_command[-1:] == CR:
         command = ":s/" + regex.expand_regex(V.pending_command)
-        command = command[:-1]
         command += "/g"
+        command += CR
         try:
             V.input(command)
             V.pending_command = ""
