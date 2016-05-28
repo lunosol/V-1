@@ -34,7 +34,7 @@ def main():
         file_not_found_message(source_file)
         return
 
-    if args["ARGUMENTS"][0] == '--':
+    if args["ARGUMENTS"][:1] == ['--']:
         args["ARGUMENTS"] = args["ARGUMENTS"][1:]
 
     v_instance = v.V(args)

@@ -6,15 +6,19 @@ LF = chr(13)
 esc = chr(27)
 M_i = chr(233)
 
+def run_M_d_quote(v):
+    reg = v.active_reg
+    v.active_reg = chr(ord(reg) + 1)
+    v.pending_command = ""
+    v.key_stroke('"')
+    v.key_stroke(reg)
+
 def run_M_at(v):
     reg = v.active_reg
     v.active_reg = chr(ord(reg) + 1)
     v.pending_command = ""
-    if v.get_register(reg) == "":
-        v.input(chr(129))     #Keystrokes above ascii 128 cause a 'ding', thus breaking the current loop (if any)
-    else:
-        v.key_stroke("@")
-        v.key_stroke(reg)
+    v.key_stroke("@")
+    v.key_stroke(reg)
 
 def M_q_loop(v):
     #Macro playback. Puts all the text between the two M_q chars, and stuffs it in
@@ -159,6 +163,7 @@ def M_r_loop(v):
     v.pending_command = ""
 
 
+M_d_quote = chr(162)
 M_at = chr(192)
 M_D = chr(196)
 M_M = chr(205)
@@ -172,6 +177,7 @@ M_r = chr(242)
 M_s = chr(243)
 
 normal_dict = {
+M_d_quote: run_M_d_quote,
 M_at: run_M_at,
 M_D: run_M_D,
 M_S: run_M_S,

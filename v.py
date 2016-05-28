@@ -38,11 +38,11 @@ class V:
 
         self.active_reg = "a"
         self.pending_number = ""
-        self.recorded_text = ""
+        self.pending_command = ""
         self.loop_symbol = ""
         self.loop_num = ""
+        self.recorded_text = ""
         self.recording = False
-        self.pending_command = ""
         self.keys_sent = []
 
     def __call_nvim__(self):
