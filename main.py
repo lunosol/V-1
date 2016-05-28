@@ -1,12 +1,13 @@
-"""Usage: 
+"""Usage:
   main.py FILE [ARGUMENTS ... ]
   main.py FILE [options] [ARGUMENTS ... ]
-  main.py FILE [ARGUMENTS ... ] [options]
+  main.py FILE [options] [-- ARGUMENTS ... ]
 
 Options:
+  -v --version  Display version
   -h --help     Show this screen.
   -d            Debug mode. Opens in a visible nvim window
-  -f FILE       Open on FILE      
+  -f FILE       Open on FILE
   -w FILE       Log vim keystrokes in FILE
   --safe        Do not allow shell access
 """
@@ -33,6 +34,9 @@ def main():
         file_not_found_message(source_file)
         return
 
+    if args["ARGUMENTS"][0] == '--':
+        args["ARGUMENTS"] = args["ARGUMENTS"][1:]
+
     v_instance = v.V(args)
 
     reg = ord('a')
@@ -55,5 +59,5 @@ def main():
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="V alpha 0.1")
+    args = docopt(__doc__, version="Alpha 0.1")
     main()
