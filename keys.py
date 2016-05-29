@@ -124,6 +124,10 @@ def run_M_d(V):
     else:
         V.input("y")
 
+def run_M_P(V):
+    print(V.nvim_instance.current.line)
+    V.pending_command = ''
+    V.pending_number = ''
 
 def run_at(V):
     #At. Playback of macros. Only overridden so that we can capture "number" macros,
@@ -167,6 +171,7 @@ M_d_quote = chr(162)
 M_at = chr(192)
 M_D = chr(196)
 M_M = chr(205)
+M_P = chr(208)
 M_S = chr(211)
 M_a = chr(225)
 M_d = chr(228)
@@ -177,17 +182,18 @@ M_r = chr(242)
 M_s = chr(243)
 
 normal_dict = {
-M_d_quote: run_M_d_quote,
-M_at: run_M_at,
-M_D: run_M_D,
-M_S: run_M_S,
-M_M: run_M_M,
-M_a: run_M_a,
-M_d: run_M_d,
-M_i: run_M_i,
-M_s: run_M_s,
-M_m: run_M_m,
-'@': run_at,
+M_d_quote: [run_M_d_quote, 'p'],
+M_at: [run_M_at, ' '],
+M_D: [run_M_D],
+M_S: [run_M_S, CR],
+M_M: [run_M_M, CR],
+M_P: [run_M_P],
+M_a: [run_M_a],
+M_d: [run_M_d, M_d],
+M_i: [run_M_i],
+M_s: [run_M_s, CR],
+M_m: [run_M_m, CR],
+'@': [run_at, '"'],
 
 M_q: M_q_loop,
 M_r: M_r_loop,

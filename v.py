@@ -57,7 +57,7 @@ class V:
 
         if self.pending_command != "" or key in keys.normal_dict:
             self.pending_command += key
-            function = keys.normal_dict[self.pending_command[0]]
+            function = keys.normal_dict[self.pending_command[0]][0]
             function(self)
         elif key.isdigit():
             self.pending_number += key
@@ -77,7 +77,7 @@ class V:
         return self.nvim_instance.eval("mode(1)")
 
     def get_register(self, register):
-        command = ":echo @{}".format(register)
+        command = ":echo @{}\n".format(register)
         try:
             return self.nvim_instance.command_output(command)[1:]
         except:
@@ -99,6 +99,12 @@ class V:
             self.nvim_instance.input(key)
 
     def clean_up(self):
+        if self.pending_command:
+            func_data = keys.normal_dict[self.pending_command[0]]
+            if len(func_data) > 1:
+                closing_key = func_data[1]
+                self.key_stroke(closing_key)
+            
         if self.get_mode() == "i":
             self.key_stroke(keys.esc)
 

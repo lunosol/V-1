@@ -12,7 +12,7 @@ def expand_regex(s):
         else:
             expanded += c
 
-#    expanded = expanded[:-1] + '\r'
+    expanded += '\r'
 
     return expanded
 
