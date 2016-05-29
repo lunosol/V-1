@@ -56,43 +56,49 @@ def run_M_a(V):
 
 def run_M_s(V):
     if V.pending_command[-1:] == CR:
-        command = ":s/" + regex.expand_regex(V.pending_command) + CR
-        try:
-            V.input(command)
-            V.pending_command = ""
-        except neovim.api.nvim.NvimError: #Substitution not found
-            print("it failed...")
+        V.pending_command = V.pending_command[1:-1]
+        reg = regex.regex(":s/")
+        l = V.pending_command.split("/")
+        reg.source(l)
+        command = reg.get_final()
+
+        V.input(command)
+        V.pending_command = ""
 
 def run_M_S(V):
     if V.pending_command[-1:] == CR:
-        command = ":s/" + regex.expand_regex(V.pending_command)
-        command += "/g"
-        command += CR
-        try:
-            V.input(command)
-            V.pending_command = ""
-        except neovim.api.nvim.NvimError: #Substitution not found
-            pass
+        V.pending_command = V.pending_command[1:-1]
+        reg = regex.regex(":s/")
+        l = V.pending_command.split("/")
+        reg.source(l)
+        reg.add_flag('g')
+        command = reg.get_final()
+
+        V.input(command)
+        V.pending_command = ""
 
 def run_M_m(V):
     if V.pending_command[-1:] == CR:
-        command = ":%s/" + regex.expand_regex(V.pending_command) + CR
-        try:
-            V.input(command)
-            V.pending_command = ""
-        except neovim.api.nvim.NvimError: #Substitution not found
-            print("it failed...")
+        V.pending_command = V.pending_command[1:-1]
+        reg = regex.regex(":%s/")
+        l = V.pending_command.split("/")
+        reg.source(l)
+        command = reg.get_final()
+
+        V.input(command)
+        V.pending_command = ""
 
 def run_M_M(V):
     if V.pending_command[-1:] == CR:
-        command = ":s/" + regex.expand_regex(V.pending_command)
-        command += "/g"
-        command += CR
-        try:
-            V.input(command)
-            V.pending_command = ""
-        except neovim.api.nvim.NvimError: #Substitution not found
-            pass
+        V.pending_command = V.pending_command[1:-1]
+        reg = regex.regex(":%s/")
+        l = V.pending_command.split("/")
+        reg.source(l)
+        reg.add_flag('g')
+        command = reg.get_final()
+
+        V.input(command)
+        V.pending_command = ""
 
 def run_M_d(V):
     #Duplicate. Takes a 'motion' argument, yanks that motion, moves forward

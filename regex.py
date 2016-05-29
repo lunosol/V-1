@@ -1,18 +1,34 @@
-#'s' is a string of bytes that will be exapnded into the regex that will be
-#sent to neovim. If the sequence is incomplete, it will return an empty string
-#to signify that we are still in the regex.
-def expand_regex(s):
-    if s[-1:] not in ['\r', '\n']:
-        return ""
-    expanded = ""
+class regex:
+    def __init__(self, base):
+        self.base = base
+        self.search = []
+        self.replace = []
+        self.flags = []
 
-    for c in s[1:-1]:
-        if ord(c) >= 128:
-            expanded += '\\' + chr(ord(c) - 128)
-        else:
-            expanded += c
+    def source(self, l):
+        self.add_search(l[0])
+        if len(l) > 1:
+            self.add_replace(l[1])
+        if len(l) > 2:
+            self.add_flag(l[2])
 
-    expanded += '\r'
 
-    return expanded
+    def add_search(self, search):
+        for c in search:
+            if ord(c) >= 128:
+                self.search += '\\' + chr(ord(c) - 128)
+            else:
+                self.search += c
 
+    def add_replace(self, replace):
+        for c in replace:
+            if ord(c) >= 128:
+                self.replace += '\\' + chr(ord(c) - 128)
+            else:
+                self.replace += c
+
+    def add_flag(self, flag):
+        self.flags += flag
+
+    def get_final(self):
+        return self.base + "".join(self.search) + "/" + "".join(self.replace) + "/" + "".join(self.flags) + "\r"
