@@ -1,3 +1,9 @@
+def parenthesize(l):
+    if '(' in l or ')' in l:
+        return l
+    else:
+        return "".join("\\({}\\)".format(atom) for atom in l)
+
 class regex:
     def __init__(self, base):
         self.base = base
@@ -16,19 +22,20 @@ class regex:
     def add_search(self, search):
         for c in search:
             if ord(c) >= 128:
-                self.search += '\\' + chr(ord(c) - 128)
+                self.search += ['\\' + chr(ord(c) - 128)]
             else:
-                self.search += c
+                self.search += [c]
 
     def add_replace(self, replace):
         for c in replace:
             if ord(c) >= 128:
-                self.replace += '\\' + chr(ord(c) - 128)
+                self.replace += ['\\' + chr(ord(c) - 128)]
             else:
-                self.replace += c
+                self.replace += [c]
 
     def add_flag(self, flag):
         self.flags += flag
 
     def get_final(self):
+        self.search = parenthesize(self.search)
         return self.base + "".join(self.search) + "/" + "".join(self.replace) + "/" + "".join(self.flags) + "\r"

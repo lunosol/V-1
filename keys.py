@@ -201,7 +201,7 @@ M_s: [run_M_s, CR],
 M_m: [run_M_m, CR],
 '@': [run_at, '"'],
 
-M_q: M_q_loop,
-M_r: M_r_loop,
+M_q: [M_q_loop],
+M_r: [M_r_loop],
 }
 
