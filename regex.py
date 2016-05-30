@@ -1,9 +1,3 @@
-def parenthesize(l):
-    if '(' in l or ')' in l:
-        return l
-    else:
-        return "".join("\\({}\\)".format(atom) for atom in l)
-
 class regex:
     def __init__(self, base):
         self.base = base
@@ -37,5 +31,4 @@ class regex:
         self.flags += flag
 
     def get_final(self):
-        self.search = parenthesize(self.search)
         return self.base + "".join(self.search) + "/" + "".join(self.replace) + "/" + "".join(self.flags) + "\r"
