@@ -2,9 +2,12 @@ set noautoindent
 
 nnoremap <M-n> :norm<space>
 nnoremap <M-N> :%norm<space>
+xnoremap <M-n> :norm<space>
 
 nnoremap H gg
 nnoremap L G$
+xnoremap H gg
+xnoremap L G$
 
 onoremap J <C-v>j
 onoremap K <C-v>k
