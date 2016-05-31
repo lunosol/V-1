@@ -6,37 +6,19 @@ LF = chr(13)
 esc = chr(27)
 M_i = chr(233)
 
-def run_M_d_quote(v):
-    reg = v.active_reg
-    v.active_reg = chr(ord(reg) + 1)
-    v.pending_command = ""
-    v.key_stroke('"')
-    v.key_stroke(reg)
+def run_M_d_quote(V):
+    reg = V.active_reg
+    V.active_reg = chr(ord(reg) + 1)
+    V.pending_command = ""
+    V.key_stroke('"')
+    V.key_stroke(reg)
 
-def run_M_at(v):
-    reg = v.active_reg
-    v.active_reg = chr(ord(reg) + 1)
-    v.pending_command = ""
-    v.key_stroke("@")
-    v.key_stroke(reg)
-
-def M_q_loop(v):
-    #Macro playback. Puts all the text between the two M_q chars, and stuffs it in
-    #'@q'. Then, if there is a pending number, it plays it back that many times.
-    if v.recording:
-        v.recording = False
-        v.set_register('q', v.recorded_text)
-        command = "{}@q".format(v.loop_num)
-        v.loop_num = ""
-        v.recorded_text = ""
-        v.input(command)
-    else:
-        v.recording = True
-        v.loop_symbol = M_q
-        v.loop_num = v.pending_number
-
-    v.pending_number = ""
-    v.pending_command = ""
+def run_M_at(V):
+    reg = V.active_reg
+    V.active_reg = chr(ord(reg) + 1)
+    V.pending_command = ""
+    V.key_stroke("@")
+    V.key_stroke(reg)
 
 def run_M_i(V):
     #Single insert. Essentially `i<char><esc>` Takes one arbitrary key as an argument.
@@ -154,35 +136,80 @@ def run_M_D(V):
     V.pending_command = ''
     V.pending_number = ''
 
-def M_r_loop(v):
+def M_r_loop(V):
     #Similar to <M_q>, but `@q` is added to the end of the macro, making it recursive.
-    if v.recording:
-        v.recording = False
-        v.recorded_text += "@q"
-        v.set_register('q', v.recorded_text)
-        command = "{}@q".format(v.loop_num)
-        v.loop_num = ""
-        v.recorded_text = ""
-        v.input(command)
+    if V.recording:
+        V.recording = False
+        V.recorded_text += "@q"
+        V.set_register('q', V.recorded_text)
+        command = "{}@q".format(V.loop_num)
+        V.loop_num = ""
+        V.recorded_text = ""
+        V.input(command)
     else:
-        v.recording = True
-        v.loop_num = v.pending_number
-        v.loop_symbol = M_r
+        V.recording = True
+        V.loop_num = V.pending_number
+        V.loop_symbol = M_r
 
-    v.pending_number = ""
-    v.pending_command = ""
+    V.pending_number = ""
+    V.pending_command = ""
 
+def M_q_loop(V):
+    #Macro playback. Puts all the text between the two M_q chars, and stuffs it in
+    #'@q'. Then, if there is a pending number, it plays it back that many times.
+    if V.recording:
+        V.recording = False
+        V.set_register('q', V.recorded_text)
+        command = "{}@q".format(V.loop_num)
+        V.loop_num = ""
+        V.recorded_text = ""
+        V.input(command)
+    else:
+        V.recording = True
+        V.loop_symbol = M_q
+        V.loop_num = V.pending_number
+
+    V.pending_number = ""
+    V.pending_command = ""
+
+def M_N_rec(V):
+    if V.recording:
+        V.recording = False
+        V.set_register('q', V.recorded_text)
+        V.recorded_text = ""
+        V.input(":%norm @q\r")
+    else:
+        V.recording = True
+        V.loop_symbol = M_N
+
+    V.pending_number = ""
+    V.pending_command = ""
+
+def M_n_rec(V):
+    if V.recording:
+        V.recording = False
+        V.set_register('q', V.recorded_text)
+        V.recorded_text = ""
+        V.input(":norm @q\r")
+    else:
+        V.recording = True
+        V.loop_symbol = M_n
+
+    V.pending_number = ""
+    V.pending_command = ""
 
 M_d_quote = chr(162)
 M_at = chr(192)
 M_D = chr(196)
 M_M = chr(205)
+M_N = chr(206)
 M_P = chr(208)
 M_S = chr(211)
 M_a = chr(225)
 M_d = chr(228)
 M_l = chr(236)
 M_m = chr(237)
+M_n = chr(238)
 M_q = chr(241)
 M_r = chr(242)
 M_s = chr(243)
@@ -203,5 +230,7 @@ M_m: [run_M_m, CR],
 
 M_q: [M_q_loop],
 M_r: [M_r_loop],
+M_n: [M_n_rec],
+M_N: [M_N_rec],
 }
 
