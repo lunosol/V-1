@@ -1,8 +1,8 @@
 def get_embedded_nvim_args(args):
     if args["platform"] == "Windows":
-        nvim_args = ["nvim.exe", "-n", "-i", "NONE", "-u", ".nvim/.nvimrc"]
+        nvim_args = ["nvim.exe", "-n", "-i", "NONE", "-u", "nvim/init.vim"]
     elif args["platform"] == "Linux":
-        nvim_args = ["nvim", "-n", "-i", "NONE", "-u", ".nvim/.nvimrc"]
+        nvim_args = ["nvim", "-n", "-i", "NONE", "-u", "nvim/init.vim"]
 
     if args["-w"]:
         nvim_args += ['-W', args["-w"]]
@@ -23,9 +23,9 @@ def get_socket_path(args):
 
 def get_external_nvim_command(args):
     if args["platform"] == "Windows":
-        command = "START nvim-qt.exe \\n \\i NONE \\u .nvim\\.nvimrc "
+        command = "START nvim-qt.exe \\n \\i NONE \\u nvim\\init.vim "
     elif args["platform"] == "Linux":
-        command = "$TERM -e 'nvim -n -i NONE -u .nvim/.nvimrc "
+        command = "$TERM -e 'nvim -n -i NONE -u nvim/init.vim "
 
     if args["-w"]:
         command += ' -W {} '.format(args["-w"])

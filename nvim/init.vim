@@ -1,7 +1,7 @@
 exe 'set rtp=' . expand('$V/.config/nvim')
 exe 'set rtp+=' . expand('$V/.config/nvim/after')
 
-source .nvim/plugin/surround.vim
+source nvim/plugin/surround.vim
 
 set noautoindent
 
