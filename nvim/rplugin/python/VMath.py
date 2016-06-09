@@ -8,21 +8,14 @@ class V_math_func:
         self.num_args = num_args
 
 funcs = {
-'1': V_math_func(lambda l: 1, 0),
-'2': V_math_func(lambda l: 2, 0),
-'3': V_math_func(lambda l: 3, 0),
-'4': V_math_func(lambda l: 4, 0),
-'5': V_math_func(lambda l: 5, 0),
-'6': V_math_func(lambda l: 6, 0),
-'7': V_math_func(lambda l: 7, 0),
-'8': V_math_func(lambda l: 8, 0),
-'9': V_math_func(lambda l: 9, 0),
-'0': V_math_func(lambda l: 0, 0),
 '*': V_math_func(lambda l: l[0] * l[1], 2),
 '/': V_math_func(lambda l: l[0] / l[1], 2),
 '-': V_math_func(lambda l: l[0] - l[1], 2),
 '+': V_math_func(lambda l: l[0] + l[1], 2),
 '^': V_math_func(lambda l: l[0] ** l[1], 2),
+'<': V_math_func(lambda l: int(l[0] < l[1]), 2),
+'>': V_math_func(lambda l: int(l[0] > l[1]), 2),
+'!': V_math_func(lambda l: math.factorial(l[0]), 1),
 'c': V_math_func(lambda l: int(math.ceil(l[0])), 1),
 'f': V_math_func(lambda l: int(math.floor(l[0])), 1),
 'r': V_math_func(lambda l: int(round(l[0])), 1),
@@ -50,6 +43,9 @@ class V_math:
     def peek(self):
         return self.stack[-1]
 
+    def push(self, obj):
+        self.stack.append(obj)
+
 @neovim.plugin
 class TestPlugin(object):
     def __init__(self, nvim):
@@ -62,7 +58,6 @@ class TestPlugin(object):
 
     @neovim.function("VMathInput", sync=True)
     def VMathInput(self, args):
-        #return str(args) + str(type(args)) + str(len(args))
         self.V_math.execute(str(args[0]))
 
     @neovim.function("VMathPop", sync=True)
@@ -72,4 +67,8 @@ class TestPlugin(object):
     @neovim.function("VMathPeek", sync=True)
     def VMathPeek(self, args):
         return self.V_math.peek()
+
+    @neovim.function("VMathPush", sync=True)
+    def VMathPush(self, args):
+        self.V_math.push(args[0])
 

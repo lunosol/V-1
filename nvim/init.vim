@@ -6,6 +6,7 @@ exe 'set rtp+=' . expand('$V/nvim/after')
 
 source nvim/plugin/surround.vim
 source nvim/.init.vim-rplugin~
+source nvim/vmath.vim
 
 set noautoindent
 
