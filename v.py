@@ -77,11 +77,13 @@ class V:
         return self.nvim_instance.eval("mode(1)")
 
     def get_register(self, register):
-        command = ":echo @{}\n".format(register)
-        try:
-            return self.nvim_instance.command_output(command)[1:]
-        except:
-            return False
+        command = "@{}".format(register)
+        return self.nvim_instance.eval(command)
+#        command = ":echo @{}\n".format(register)
+#        try:
+#            return self.nvim_instance.command_output(command)[1:]
+#        except:
+#            return False
 
     def get_text(self):
         for line in self.nvim_instance.buffers:
@@ -89,8 +91,7 @@ class V:
 
     def close(self):
         if not self.args["-d"]:
-            exit_commands = ":q!" + keys.CR
-            self.nvim_instance.input(exit_commands)
+            self.nvim_instance.quit()
 
     def input(self, key):
         if self.recording:
@@ -104,7 +105,7 @@ class V:
             if len(func_data) > 1:
                 closing_key = func_data[1]
                 self.key_stroke(closing_key)
-            
+
         if self.get_mode() == "i":
             self.key_stroke(keys.esc)
 
