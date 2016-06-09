@@ -44,6 +44,8 @@ def main():
         v_instance.set_register(chr(reg), i)
         reg += 1
 
+    v_instance.set_register('z', os.path.abspath(source_file))
+
     with open(source_file) as source:
         for line in source:
             for char in line:
