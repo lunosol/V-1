@@ -34,7 +34,7 @@ class V:
                 sys.exit()
 
         if self.args["--safe"]:
-            self.nvim_instance.command("source .nvim/safe_mode.vim")
+            self.nvim_instance.command("source nvim/safe_mode.vim")
 
         self.active_reg = "a"
         self.pending_number = ""
