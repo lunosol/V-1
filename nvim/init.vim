@@ -9,6 +9,7 @@ source nvim/.init.vim-rplugin~
 source nvim/vmath.vim
 
 set noautoindent
+set nostartofline
 
 nnoremap H gg
 nnoremap L G$
