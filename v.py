@@ -9,6 +9,8 @@ import time
 import threading
 from trollius import py33_exceptions
 
+literals = {"<": "<lt>"}
+
 class V:
     def __init__(self, args):
         self.args = args
@@ -51,7 +53,6 @@ class V:
         arg = os_code.get_external_nvim_command(self.args)
         os.system(arg)
 
-
     def key_stroke(self, key):
         self.keys_sent.append(key)
 
@@ -76,14 +77,14 @@ class V:
     def get_mode(self):
         return self.nvim_instance.eval("mode(1)")
 
+    def get_literal(self, key):
+        if key in literals:
+            return literals[key]
+        return key
+
     def get_register(self, register):
         command = "@{}".format(register)
         return self.nvim_instance.eval(command)
-#        command = ":echo @{}\n".format(register)
-#        try:
-#            return self.nvim_instance.command_output(command)[1:]
-#        except:
-#            return False
 
     def get_text(self):
         for line in self.nvim_instance.buffers:
@@ -93,11 +94,12 @@ class V:
         if not self.args["-d"]:
             self.nvim_instance.quit()
 
-    def input(self, key):
+    def input(self, keys):
         if self.recording:
-            self.recorded_text += key
+            self.recorded_text += keys
         else:
-            self.nvim_instance.input(key)
+            for i in keys:
+                self.nvim_instance.input(self.get_literal(i))
 
     def clean_up(self):
         if self.pending_command:
