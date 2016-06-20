@@ -33,6 +33,8 @@ def main():
     external_neovim = args['-d']
     source_file = args['FILE']
     args["platform"] = platform.system()
+    if args["platform"] == "Darwin":
+        args["platform"] = "Linux"
 
     if args["ARGUMENTS"][:1] == ['--']:
         args["ARGUMENTS"] = args["ARGUMENTS"][1:]
