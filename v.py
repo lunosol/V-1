@@ -80,6 +80,8 @@ class V:
     def get_literal(self, key):
         if key in literals:
             return literals[key]
+        if ord(key) > 127:
+            return "<M-{}>".format(chr(ord(key) - 128))
         return key
 
     def get_register(self, register):
@@ -99,7 +101,7 @@ class V:
             self.recorded_text += keys
         else:
             for i in keys:
-                self.nvim_instance.input(self.get_literal(i))
+                n = self.nvim_instance.input(self.get_literal(i))
 
     def clean_up(self):
         if self.pending_command:
