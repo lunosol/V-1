@@ -1,3 +1,5 @@
+from key_defs import *
+
 class regex:
     def __init__(self, base):
         self.base = base
@@ -5,7 +7,9 @@ class regex:
         self.replace = []
         self.flags = []
 
-    def source(self, l):
+    def source(self, s):
+        s = s.replace("\\/", Keys.M_slash)
+        l = s.split("/")
         self.add_search(l[0])
         if len(l) > 1:
             self.add_replace(l[1])

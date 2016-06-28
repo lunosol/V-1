@@ -40,8 +40,7 @@ def run_M_s(V):
     if V.pending_command[-1:] == CR:
         V.pending_command = V.pending_command[1:-1]
         reg = regex.regex(":s/")
-        l = V.pending_command.split("/")
-        reg.source(l)
+        reg.source(V.pending_command)
         command = reg.get_final()
 
         V.input(command)
@@ -51,8 +50,7 @@ def run_M_S(V):
     if V.pending_command[-1:] == CR:
         V.pending_command = V.pending_command[1:-1]
         reg = regex.regex(":s/")
-        l = V.pending_command.split("/")
-        reg.source(l)
+        reg.source(V.pending_command)
         reg.add_flag('g')
         command = reg.get_final()
 
@@ -63,8 +61,7 @@ def run_M_m(V):
     if V.pending_command[-1:] == CR:
         V.pending_command = V.pending_command[1:-1]
         reg = regex.regex(":%s/")
-        l = V.pending_command.split("/")
-        reg.source(l)
+        reg.source(V.pending_command)
         command = reg.get_final()
 
         V.input(command)
@@ -74,8 +71,7 @@ def run_M_M(V):
     if V.pending_command[-1:] == CR:
         V.pending_command = V.pending_command[1:-1]
         reg = regex.regex(":%s/")
-        l = V.pending_command.split("/")
-        reg.source(l)
+        reg.source(V.pending_command)
         reg.add_flag('g')
         command = reg.get_final()
 
