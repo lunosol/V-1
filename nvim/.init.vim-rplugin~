@@ -1,0 +1,16 @@
+" python3 plugins
+
+
+" ruby plugins
+
+
+" python plugins
+call remote#host#RegisterPlugin('python', '/home/jmhjr/Programming/V/nvim/rplugin/python/VMath.py', [
+      \ {'sync': v:true, 'name': 'TestFunction', 'type': 'function', 'opts': {}},
+      \ {'sync': v:true, 'name': 'VMathInput', 'type': 'function', 'opts': {}},
+      \ {'sync': v:true, 'name': 'VMathPeek', 'type': 'function', 'opts': {}},
+      \ {'sync': v:true, 'name': 'VMathPop', 'type': 'function', 'opts': {}},
+      \ {'sync': v:true, 'name': 'VMathPush', 'type': 'function', 'opts': {}},
+     \ ])
+
+
