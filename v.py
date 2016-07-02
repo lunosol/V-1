@@ -51,7 +51,7 @@ class V:
         os.system(arg)
 
     def key_stroke(self, key):
-        self.nvim_instance.feedkeys(key)
+        self.nvim_instance.input(key)
 
     def set_register(self, register, value):
         command = ":let @{}='{}'".format(register, value)

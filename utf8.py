@@ -21,7 +21,7 @@ class enc_safe_file():
                 if char in mapping:
                         yield mapping[char]
                 else:
-                    yield char.encode("latin1")
+                    yield char.encode("utf-8")
 
     def exists(self):
         return self.file != None
