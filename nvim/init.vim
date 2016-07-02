@@ -8,5 +8,6 @@ source nvim/plugin/surround.vim
 source nvim/.init.vim-rplugin~
 source nvim/vmath.vim
 source nvim/motions.vim
+source nvim/normal_keys.vim
 
 set noautoindent
