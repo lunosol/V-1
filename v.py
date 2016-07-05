@@ -64,17 +64,6 @@ class V:
     def get_mode(self):
         return self.nvim_instance.eval("mode(1)")
 
-    def get_literal(self, key):
-        if key in literals:
-            return literals[key]
-        if ord(key) > 127:
-            return "<M-{}>".format(chr(ord(key) - 128))
-        return key
-
-    def get_register(self, register):
-        command = "@{}".format(register)
-        return self.nvim_instance.eval(command)
-
     def get_text(self):
         for line in self.nvim_instance.buffers:
             yield line
