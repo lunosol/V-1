@@ -51,6 +51,8 @@ class V:
         os.system(arg)
 
     def key_stroke(self, key):
+        if key == '\n':
+            key = '\r'
         self.nvim_instance.input(key)
 
     def set_register(self, register, value):
