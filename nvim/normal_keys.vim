@@ -19,7 +19,7 @@ function! RecordQ()
     let c = nr2char(getchar())
   endwhile
   let @q=text
-  exec "normal! "v:count1."@q"
+  call feedkeys(v:count1."@q")
 endfunction
 
 nnoremap ñ :<C-u>call RecordQ()<cr>
@@ -32,7 +32,7 @@ function! RecursiveQ()
     let c = nr2char(getchar())
   endwhile
   let @q=text."@q"
-  normal @q
+  call feedkeys(v:count1."@q")
 endfunction
 
 nnoremap ò :<C-u>call RecursiveQ()<cr>

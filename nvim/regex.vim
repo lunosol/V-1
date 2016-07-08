@@ -9,7 +9,9 @@ function! Search(com)
     endif
     let c = getchar()
   endwhile
-  exe "silent! ".a:com.command
+"  exe "silent ".a:com.command
+"  exe a:com.command
+  call feedkeys(a:com.command."\<CR>", "i")
 endfunction
 
 nnoremap / :<C-u>call Search("/")<CR>
@@ -44,11 +46,13 @@ function! Substitute(com, global)
     let command .= "g"
   endif
 
-  exe "silent! ".a:com.command
+"  exe "silent ".a:com.command
+"  exe a:com.command
+  call feedkeys(a:com.command."\<CR>", "i")
 endfunction
 
-nnoremap ó :<C-u>call Substitute("s/", 0)<CR>
-nnoremap Ó :<C-u>call Substitute("s/", 1)<CR>
-nnoremap í :<C-u>call Substitute("%s/", 0)<CR>
-nnoremap Í :<C-u>call Substitute("%s/", 1)<CR>
+nnoremap ó :<C-u>call Substitute(":s/", 0)<CR>
+nnoremap Ó :<C-u>call Substitute(":s/", 1)<CR>
+nnoremap í :<C-u>call Substitute(":%s/", 0)<CR>
+nnoremap Í :<C-u>call Substitute(":%s/", 1)<CR>
 
