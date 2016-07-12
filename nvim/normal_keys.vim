@@ -37,3 +37,21 @@ endfunction
 
 nnoremap ò :<C-u>call RecursiveQ()<cr>
 
+function! Duplicate()
+  let motion = nr2char(getchar())
+  if v:count1 == 1
+    call feedkeys("y")
+  else
+    call feedkeys("d")
+  endif
+  call feedkeys(motion)
+  while mode(1) != 'n'
+    let motion = nr2char(getchar())
+    call feedkeys(motion)
+  endwhile
+
+  call feedkeys(v:count1."P")
+endfunction
+
+nnoremap ä :<C-u>call Duplicate()<cr>
+nnoremap Ä :<C-u>call Duplicate()<cr>_
