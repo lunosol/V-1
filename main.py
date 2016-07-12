@@ -40,10 +40,12 @@ def main():
 
     v_instance = v.V(args)
 
-    reg = ord('a')
+    reg = 0
     for i in args["ARGUMENTS"]:
-        v_instance.set_register(chr(reg), i)
+        v_instance.set_register(chr(reg + 97), i)
         reg += 1
+
+    v_instance.nvim_instance.command(":let g:num_regs={}".format(reg))
 
     v_instance.set_register('z', os.path.abspath(source_file))
 
