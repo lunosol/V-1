@@ -1,13 +1,13 @@
 function! Search(com)
-  let c = getchar()
+  let c = getchar(0)
   let command = ""
-  while c != 13
+  while c != 13 && c != nr2char(0)
     if c > 128
       let command .= "\\".nr2char(c - 128)
     else
       let command .= nr2char(c)
     endif
-    let c = getchar()
+    let c = getchar(0)
   endwhile
 "  exe "silent ".a:com.command
 "  exe a:com.command
@@ -18,23 +18,23 @@ nnoremap / :<C-u>call Search("/")<CR>
 nnoremap ? :<C-u>call Search("?")<CR>
 
 function! Substitute(com, global)
-  let c = getchar()
+  let c = getchar(0)
   let command = ""
   let slashes_seen = 0
 
-  while c != 13
+  while c != 13 && c != nr2char(0)
     if nr2char(c) == "/"
       let slashes_seen += 1
     endif
 
     if nr2char(c) == "\\"
-      let command .= "\\".nr2char(getchar())
+      let command .= "\\".nr2char(getchar(0))
     elseif c > 128
       let command .= "\\".nr2char(c - 128)
     else
       let command .= nr2char(c)
     endif
-    let c = getchar()
+    let c = getchar(0)
   endwhile
 
   while slashes_seen < 2
