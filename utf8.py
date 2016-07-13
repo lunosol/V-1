@@ -1,7 +1,7 @@
 import codecs
 import os
 
-mapping = {}
+mapping = {'\n' : '\r'}
 
 class enc_safe_file():
     def __init__(self, file_name, utf8):
