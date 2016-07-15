@@ -11,7 +11,7 @@ endfunction
 nnoremap é :<C-u>call SingleInsert()<CR>
 nnoremap á :<C-u>call SingleAppend()<CR>
 
-function! RecordQ()
+function! RecordQ(count)
   let c = nr2char(getchar(0))
   let text = ""
   while c != "ñ" && c != nr2char(0)
@@ -19,12 +19,15 @@ function! RecordQ()
     let c = nr2char(getchar(0))
   endwhile
   let @q=text
-  call feedkeys(v:count1."@q")
+  if count
+    call feedkeys(a:count."@q")
+  endif
 endfunction
 
-nnoremap ñ :<C-u>call RecordQ()<cr>
+nnoremap ñ :<C-u>call RecordQ(v:count1)<cr>
+nnoremap 0ñ :<C-u>call RecordQ(0)<cr>
 
-function! RecursiveQ()
+function! RecursiveQ(count)
   let c = nr2char(getchar(0))
   let text = ""
   while c != "ò" && c != nr2char(0)
@@ -32,10 +35,13 @@ function! RecursiveQ()
     let c = nr2char(getchar(0))
   endwhile
   let @q=text."@q"
-  call feedkeys(v:count1."@q")
+  if a:count
+    call feedkeys("@q")
+  endif
 endfunction
 
-nnoremap ò :<C-u>call RecursiveQ()<cr>
+nnoremap ò :<C-u>call RecursiveQ(v:count1)<cr>
+nnoremap 0ò :<C-u>call RecursiveQ(0)<cr>
 
 function! Duplicate()
   let motion = nr2char(getchar(0))
