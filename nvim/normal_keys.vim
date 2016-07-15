@@ -72,3 +72,21 @@ nnoremap À :<C-u>call NextActiveRegister("@")<CR>
 nnoremap ¢ :<C-u>call NextActiveRegister("'")<CR>
 inoremap ò <C-o>:<C-u>call NextActiveRegister('<C-v><C-r>')<CR>
 
+function! RepCharInsert(n)
+  let c = nr2char(getchar(0))
+  call feedkeys(repeat(c, a:n))
+endfunction
+
+
+inoremap ± <C-o>:<C-u>call RepCharInsert(10)<cr>
+inoremap ² <C-o>:<C-u>call RepCharInsert(20)<cr>
+inoremap ³ <C-o>:<C-u>call RepCharInsert(3)<cr>
+inoremap ´ <C-o>:<C-u>call RepCharInsert(4)<cr>
+inoremap µ <C-o>:<C-u>call RepCharInsert(5)<cr>
+inoremap ¶ <C-o>:<C-u>call RepCharInsert(6)<cr>
+inoremap · <C-o>:<C-u>call RepCharInsert(7)<cr>
+inoremap ¸ <C-o>:<C-u>call RepCharInsert(8)<cr>
+inoremap ¹ <C-o>:<C-u>call RepCharInsert(9)<cr>
+
+
+
