@@ -1,8 +1,12 @@
+let g:RegexShortcuts = {129: '.*', 130: '.+', 131: '.\{-}', 132: '[^', 133: '\ze', 135: '\{-}', 147: '\zs'}
+
 function! Search(com)
   let c = getchar(0)
   let command = ""
   while c != 13 && c != nr2char(0)
-    if c > 128
+    if has_key(g:RegexShortcuts, c)
+      let command .= g:RegexShortcuts[c]
+    elseif c > 128
       let command .= "\\".nr2char(c - 128)
     else
       let command .= nr2char(c)
@@ -29,6 +33,8 @@ function! Substitute(com, global)
 
     if nr2char(c) == "\\"
       let command .= "\\".nr2char(getchar(0))
+    elseif has_key(g:RegexShortcuts, c)
+      let command .= g:RegexShortcuts[c]
     elseif c > 128
       let command .= "\\".nr2char(c - 128)
     else
