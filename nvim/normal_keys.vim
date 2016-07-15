@@ -71,7 +71,7 @@ function! NextActiveRegister(BaseCommand)
   if g:active_reg >= g:num_regs
     let g:active_reg = 0
   endif
-  call feedkeys(a:BaseCommand.active_reg)
+  call feedkeys(a:BaseCommand.active_reg, 'i')
 endfunction
 
 nnoremap À :<C-u>call NextActiveRegister("@")<CR>
@@ -80,7 +80,7 @@ inoremap ò <C-o>:<C-u>call NextActiveRegister('<C-v><C-r>')<CR>
 
 function! RepCharInsert(n)
   let c = nr2char(getchar(0))
-  call feedkeys(repeat(c, a:n))
+  call feedkeys(repeat(c, a:n), 'i')
 endfunction
 
 
