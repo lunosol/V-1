@@ -1,10 +1,10 @@
 function! SingleInsert()
-  let c = nr2char(getchar(0))
+  let c = nr2char(getchar())
   exe "normal! ".v:count1."i".c."\<esc>"
 endfunction
 
 function! SingleAppend()
-  let c = nr2char(getchar(0))
+  let c = nr2char(getchar())
   exe "normal! ".v:count1."a".c."\<esc>"
 endfunction
 
@@ -12,11 +12,11 @@ nnoremap é :<C-u>call SingleInsert()<CR>
 nnoremap á :<C-u>call SingleAppend()<CR>
 
 function! RecordQ(count)
-  let c = nr2char(getchar(0))
+  let c = nr2char(getchar())
   let text = ""
   while c != "ñ" && c != nr2char(0)
     let text .= c
-    let c = nr2char(getchar(0))
+    let c = nr2char(getchar())
   endwhile
   let @q=text
   if count
@@ -28,11 +28,11 @@ nnoremap ñ :<C-u>call RecordQ(v:count1)<cr>
 nnoremap 0ñ :<C-u>call RecordQ(0)<cr>
 
 function! RecursiveQ(count)
-  let c = nr2char(getchar(0))
+  let c = nr2char(getchar())
   let text = ""
   while c != "ò" && c != nr2char(0)
     let text .= c
-    let c = nr2char(getchar(0))
+    let c = nr2char(getchar())
   endwhile
   let @q=text."@q"
   if a:count
@@ -44,7 +44,7 @@ nnoremap ò :<C-u>call RecursiveQ(v:count1)<cr>
 nnoremap 0ò :<C-u>call RecursiveQ(0)<cr>
 
 function! Duplicate()
-  let motion = nr2char(getchar(0))
+  let motion = nr2char(getchar())
   if v:count1 == 1
     call feedkeys("y")
   else
@@ -52,7 +52,7 @@ function! Duplicate()
   endif
   call feedkeys(motion)
   while mode(1) != 'n'
-    let motion = nr2char(getchar(0))
+    let motion = nr2char(getchar())
     call feedkeys(motion)
   endwhile
 
@@ -79,7 +79,7 @@ nnoremap ¢ :<C-u>call NextActiveRegister("'")<CR>
 inoremap ò <C-o>:<C-u>call NextActiveRegister('<C-v><C-r>')<CR>
 
 function! RepCharInsert(n)
-  let c = nr2char(getchar(0))
+  let c = nr2char(getchar())
   call feedkeys(repeat(c, a:n), 'i')
 endfunction
 

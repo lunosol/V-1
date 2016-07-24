@@ -55,10 +55,10 @@ def main():
         print("Error:\nFile: {} not found.".format(source_file), file=sys.stderr)
         return
 
-    v_instance.nvim_instance.input("".join(char for char in source.read()))
+#    v_instance.nvim_instance.input("".join(char for char in source.read()))
 
-#    for char in source.read():
-#        v_instance.key_stroke(char)
+    for char in source.read():
+        v_instance.key_stroke(char)
 
     v_instance.clean_up()
 
