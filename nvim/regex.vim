@@ -58,3 +58,39 @@ nnoremap Ó :<C-u>call Substitute(":s/", 1)<CR>
 nnoremap í :<C-u>call Substitute(":%s/", 0)<CR>
 nnoremap Í :<C-u>call Substitute(":%s/", 1)<CR>
 
+function! Global(com)
+  let c = getchar()
+  let command = ""
+
+  while c != char2nr('/')
+    if nr2char(c) == "\\"
+      let command .= "\\".nr2char(getchar())
+    elseif has_key(g:RegexShortcuts, c)
+      let command .= g:RegexShortcuts[c]
+    elseif c == 255
+      "If we get here, there's no point trying to parse the rest of the
+      "command. Bail right now!
+      return 0
+    elseif c > 128
+      let command .= "\\".nr2char(c - 128)
+    else
+      let command .= nr2char(c)
+    endif
+    let c = getchar()
+  endwhile
+
+  let command .= "/norm "
+
+  let c = getchar()
+  while c != 13 && c != 255
+    let command .= nr2char(c)
+    let c = getchar()
+  endwhile
+
+  let command .= nr2char(255)
+
+  call feedkeys(a:com.command."\<CR>", "in")
+endfunction
+
+nnoremap ç :<C-u>call Global(":g/")<CR>
+nnoremap Ç :<C-u>call Global(":g!/")<CR>
