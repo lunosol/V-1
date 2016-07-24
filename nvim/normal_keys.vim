@@ -112,3 +112,11 @@ nnoremap Ò Vr
 nnoremap gõ gul
 nnoremap gÕ gUl
 nnoremap gþ g~l
+
+"Mapping to ':norm' and ':%norm'
+nnoremap î :norm<space>
+nnoremap Î :%norm<space>
+xnoremap î :norm<space>
+xnoremap Î :%norm<space>
+cnoremap î norm<space>
+cnoremap Î %norm<space>
