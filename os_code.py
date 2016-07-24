@@ -25,7 +25,7 @@ def get_external_nvim_command(args):
     if args["platform"] == "Windows":
         command = "START nvim-qt.exe \\n \\i NONE \\u nvim\\init.vim "
     elif args["platform"] == "Linux":
-        command = "$TERM -e 'nvim -n -i NONE -u nvim/init.vim "
+        command = "xterm -e 'nvim -n -i NONE -u nvim/init.vim "
 
     if args["-w"]:
         command += ' -W {} '.format(args["-w"])

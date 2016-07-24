@@ -14,12 +14,12 @@ nnoremap á :<C-u>call SingleAppend()<CR>
 function! RecordQ(count)
   let c = nr2char(getchar())
   let text = ""
-  while c != "ñ" && c != nr2char(0)
+  while c != "ñ" && c != nr2char(255)
     let text .= c
     let c = nr2char(getchar())
   endwhile
-  let @q=text
-  if count
+  let @q=text.nr2char(255)
+  if a:count
     call feedkeys(a:count."@q")
   endif
 endfunction
@@ -30,11 +30,11 @@ nnoremap 0ñ :<C-u>call RecordQ(0)<cr>
 function! RecursiveQ(count)
   let c = nr2char(getchar())
   let text = ""
-  while c != "ò" && c != nr2char(0)
+  while c != "ò" && c != nr2char(255)
     let text .= c
     let c = nr2char(getchar())
   endwhile
-  let @q=text."@q"
+  let @q=text.nr2char(255)."@q"
   if a:count
     call feedkeys("@q")
   endif
@@ -42,6 +42,10 @@ endfunction
 
 nnoremap ò :<C-u>call RecursiveQ(v:count1)<cr>
 nnoremap 0ò :<C-u>call RecursiveQ(0)<cr>
+
+"<M-R>, or (R)eplace. Useful for replacing an entire line with another
+"character.
+nnoremap Ò Vr
 
 function! Duplicate()
   let motion = nr2char(getchar())
@@ -83,7 +87,6 @@ function! RepCharInsert(n)
   call feedkeys(repeat(c, a:n), 'i')
 endfunction
 
-
 inoremap ± <C-o>:<C-u>call RepCharInsert(10)<cr>
 inoremap ² <C-o>:<C-u>call RepCharInsert(20)<cr>
 inoremap ³ <C-o>:<C-u>call RepCharInsert(3)<cr>
@@ -93,6 +96,4 @@ inoremap ¶ <C-o>:<C-u>call RepCharInsert(6)<cr>
 inoremap · <C-o>:<C-u>call RepCharInsert(7)<cr>
 inoremap ¸ <C-o>:<C-u>call RepCharInsert(8)<cr>
 inoremap ¹ <C-o>:<C-u>call RepCharInsert(9)<cr>
-
-
 

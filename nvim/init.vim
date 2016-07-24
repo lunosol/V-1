@@ -12,3 +12,9 @@ source nvim/normal_keys.vim
 source nvim/regex.vim
 
 set noautoindent
+
+nnoremap ÿ <esc>
+inoremap ÿ <esc>
+xnoremap ÿ <esc>
+cnoremap ÿ <cr>
+onoremap ÿ _

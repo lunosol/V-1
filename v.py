@@ -35,15 +35,6 @@ class V:
         if self.args["--safe"]:
             self.nvim_instance.command("source nvim/safe_mode.vim")
 
-        self.active_reg = "a"
-        self.pending_number = ""
-        self.pending_command = ""
-        self.loop_symbol = ""
-        self.loop_num = ""
-        self.recorded_text = ""
-        self.recording = False
-        self.keys_sent = []
-
     def __call_nvim__(self):
         socket = os_code.get_socket_path(self.args)
 
@@ -75,8 +66,6 @@ class V:
             self.nvim_instance.quit()
 
     def clean_up(self):
-        if self.get_mode() == "i":
-            self.key_stroke(chr(27))
+        self.key_stroke(u'\xff'.encode(encoding = "UTF-8"))
+        self.key_stroke(u'\xff'.encode(encoding = "UTF-8"))
 
-        if self.recording:
-            self.key_stroke(self.loop_symbol)

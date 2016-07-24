@@ -3,7 +3,7 @@ let g:RegexShortcuts = {129: '.*', 130: '.+', 131: '.\{-}', 132: '[^', 133: '\ze
 function! Search(com)
   let c = getchar()
   let command = ""
-  while c != 13 && c != nr2char(0)
+  while c != 13 && c != 255
     if has_key(g:RegexShortcuts, c)
       let command .= g:RegexShortcuts[c]
     elseif c > 128
@@ -13,9 +13,7 @@ function! Search(com)
     endif
     let c = getchar()
   endwhile
-"  exe "silent ".a:com.command
-"  exe a:com.command
-  call feedkeys(a:com.command."\<CR>", "i")
+  call feedkeys(a:com.command."\<CR>", "in")
 endfunction
 
 nnoremap / :<C-u>call Search("/")<CR>
@@ -26,7 +24,7 @@ function! Substitute(com, global)
   let command = ""
   let slashes_seen = 0
 
-  while c != 13 && c != nr2char(0)
+  while c != 13 && c != 255
     if nr2char(c) == "/"
       let slashes_seen += 1
     endif
@@ -52,9 +50,7 @@ function! Substitute(com, global)
     let command .= "g"
   endif
 
-"  exe "silent ".a:com.command
-"  exe a:com.command
-  call feedkeys(a:com.command."\<CR>", "i")
+  call feedkeys(a:com.command."\<CR>", "in")
 endfunction
 
 nnoremap ó :<C-u>call Substitute(":s/", 0)<CR>
