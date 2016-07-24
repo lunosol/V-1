@@ -43,28 +43,33 @@ endfunction
 nnoremap ò :<C-u>call RecursiveQ(v:count1)<cr>
 nnoremap 0ò :<C-u>call RecursiveQ(0)<cr>
 
-"<M-R>, or (R)eplace. Useful for replacing an entire line with another
-"character.
-nnoremap Ò Vr
-
-function! Duplicate()
+function! Duplicate(count)
   let motion = nr2char(getchar())
-  if v:count1 == 1
+  if a:count == 0
     call feedkeys("y")
   else
     call feedkeys("d")
   endif
+
   call feedkeys(motion)
   while mode(1) != 'n'
     let motion = nr2char(getchar())
     call feedkeys(motion)
   endwhile
 
-  call feedkeys(v:count1."P")
+  if a:count != -1
+    if a:count == 0
+      call feedkeys("P")
+    else
+      call feedkeys(a:count."P")
+    endif
+  endif
 endfunction
 
-nnoremap ä :<C-u>call Duplicate()<cr>
-nnoremap Ä :<C-u>call Duplicate()<cr>_
+nnoremap ä :<C-u>call Duplicate(v:count)<cr>
+nnoremap Ä :<C-u>call Duplicate(v:count)<cr>_
+nnoremap 0ä :<C-u>call Duplicate(-1)<cr>
+nnoremap 0Ä :<C-u>call Duplicate(-1)<cr>_
 
 let g:active_reg = 0
 let g:num_regs = 1
@@ -97,3 +102,13 @@ inoremap · <C-o>:<C-u>call RepCharInsert(7)<cr>
 inoremap ¸ <C-o>:<C-u>call RepCharInsert(8)<cr>
 inoremap ¹ <C-o>:<C-u>call RepCharInsert(9)<cr>
 
+"Minor mappings:
+
+"<M-R>, or (R)eplace. Useful for replacing an entire line with another
+"character.
+nnoremap Ò Vr
+
+"A couple shortcuts to 'Change case of char under cursor'
+nnoremap gõ gul
+nnoremap gÕ gUl
+nnoremap gþ g~l
