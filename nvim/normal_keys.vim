@@ -43,33 +43,27 @@ endfunction
 nnoremap ò :<C-u>call RecursiveQ(v:count1)<cr>
 nnoremap 0ò :<C-u>call RecursiveQ(0)<cr>
 
-function! Duplicate(count)
-  let motion = nr2char(getchar())
-  if a:count == 0
-    call feedkeys("y")
+function! Duplicate(type, ...) range
+  let l:op = g:paste_num ? 'd' : 'y'
+  if a:0  " Invoked from Visual mode, use gv command.
+    silent exe "normal! gv".l:op
+  elseif a:type == 'line'
+    silent exe "normal! '[V']".l:op
   else
-    call feedkeys("d")
+    silent exe "normal! `[v`]".l:op
   endif
 
-  call feedkeys(motion)
-  while mode(1) != 'n'
-    let motion = nr2char(getchar())
-    call feedkeys(motion)
-  endwhile
-
-  if a:count != -1
-    if a:count == 0
-      call feedkeys("P")
-    else
-      call feedkeys(a:count."P")
-    endif
+  if g:paste_num > 0
+    silent exe "normal! ".g:paste_num."P"
+  elseif g:paste_num == 0
+    silent exe "normal! P"
   endif
 endfunction
 
-nnoremap ä :<C-u>call Duplicate(v:count)<cr>
-nnoremap Ä :<C-u>call Duplicate(v:count)<cr>_
-nnoremap 0ä :<C-u>call Duplicate(-1)<cr>
-nnoremap 0Ä :<C-u>call Duplicate(-1)<cr>_
+nnoremap ä :<C-u>let g:paste_num=v:count<cr>:set opfunc=Duplicate<cr>g@
+nnoremap Ä :<C-u>let g:paste_num=v:count<cr>:set opfunc=Duplicate<cr>g@_
+nnoremap 0Ä :<C-u>let g:paste_num=-1<cr>:set opfunc=Duplicate<cr>g@_
+nnoremap 0ä :<C-u>let g:paste_num=-1<cr>:set opfunc=Duplicate<cr>g@
 
 let g:active_reg = 0
 let g:num_regs = 1

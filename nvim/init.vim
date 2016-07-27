@@ -12,6 +12,8 @@ source nvim/normal_keys.vim
 source nvim/regex.vim
 
 set noautoindent
+set notimeout
+set nottimeout
 
 nnoremap ÿ <esc>
 inoremap ÿ <esc>
