@@ -29,7 +29,6 @@ import sys
 
 def main():
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
-    print(os.getcwd())
 
     has_secondary_file = args['-f']
     external_neovim = args['-d']
