@@ -28,8 +28,6 @@ import os
 import sys
 
 def main():
-    os.chdir(os.path.dirname(os.path.realpath(__file__)))
-
     has_secondary_file = args['-f']
     external_neovim = args['-d']
     source_file = args['FILE']
@@ -39,6 +37,14 @@ def main():
 
     if args["ARGUMENTS"][:1] == ['--']:
         args["ARGUMENTS"] = args["ARGUMENTS"][1:]
+
+    source = utf8.enc_safe_file(source_file, args["--utf8"])
+
+    if not source.exists():
+        print("Error:\nFile: {} not found.".format(source_file), file=sys.stderr)
+        return
+
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
     v_instance = v.V(args)
 
@@ -50,14 +56,6 @@ def main():
     v_instance.nvim_instance.command(":let g:num_regs={}".format(reg))
 
     v_instance.set_register('z', os.path.abspath(source_file))
-
-    source = utf8.enc_safe_file(source_file, args["--utf8"])
-
-    if not source.exists():
-        print("Error:\nFile: {} not found.".format(source_file), file=sys.stderr)
-        return
-
-#    v_instance.nvim_instance.input("".join(char for char in source.read()))
 
     for char in source.read():
         v_instance.key_stroke(char)
