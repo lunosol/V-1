@@ -7,9 +7,12 @@ xnoremap ë :<C-u>call StraightUp('v')<cr>
 onoremap ê :<C-u>call StraightDown('o')<cr>
 onoremap ë :<C-u>call StraightUp('o')<cr>
 
-nnoremap L G$
+nnoremap L :<C-u>call L('n', v:count)<cr>
+xnoremap L :<C-u>call L('v', v:count)<cr>
+onoremap L :<C-u>call L('o', v:count)<cr>
+
+nnoremap H gg
 xnoremap H gg
-xnoremap L G$
 
 "Execute a motion on the 'next' text object
 onoremap an :<c-u>call <SID>NextTextObject('a')<cr>
@@ -50,4 +53,17 @@ function! StraightUp(mode)
     exe "normal \<C-v>"
   endif
   exe "normal ".eval(line-1)."k"
+endfunction
+
+function! L(mode, count)
+  if a:mode == 'v'
+    exe "normal gv"
+  elseif a:mode == 'o'
+    exe "normal \<C-v>"
+  endif
+  if a:count == 0
+    exe "normal! G$"
+  else
+    exe "normal! ".a:count."G$"
+  endif
 endfunction

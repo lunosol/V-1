@@ -102,11 +102,6 @@ inoremap ¹ <C-o>:<C-u>call RepCharInsert(9)<cr>
 "character.
 nnoremap Ò Vr
 
-"A couple shortcuts to 'Change case of char under cursor'
-nnoremap gõ gul
-nnoremap gÕ gUl
-nnoremap gþ g~l
-
 "Mapping to ':norm' and ':%norm'
 nnoremap î :norm<space>
 nnoremap Î :%norm<space>
