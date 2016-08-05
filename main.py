@@ -20,7 +20,6 @@ import v
 
 from docopt import docopt
 import neovim
-import hexdump
 import utf8
 import subprocess
 import threading
@@ -64,7 +63,8 @@ def main():
     v_instance.clean_up()
 
     if args['--hexdump']:
-        print(hexdump.dump(source.original_source.encode("CP1252")), file=sys.stderr)
+        xxd = subprocess.Popen("xxd", stdout=sys.stderr, stdin=subprocess.PIPE)
+        xxd.communicate(source.original_source.encode("CP1252"))
 
     for line in v_instance.get_text():
         for char in line:
