@@ -1,5 +1,4 @@
 import codecs
-import hexdump
 import os
 
 mapping = {'\n' : '\r'}
