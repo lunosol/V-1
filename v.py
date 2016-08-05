@@ -12,7 +12,7 @@ class V:
     def __init__(self, args):
         self.args = args
 
-        if args["-d"]:
+        if args["--debug"]:
             nvim_launcher_thread = threading.Thread(target=self.__call_nvim__) #Launch nvim in new thread so that V doesn't hang
             nvim_launcher_thread.start()
             time.sleep(1)
@@ -62,7 +62,7 @@ class V:
             yield line
 
     def close(self):
-        if not self.args["-d"]:
+        if not self.args["--debug"]:
             self.nvim_instance.quit()
 
     def clean_up(self):

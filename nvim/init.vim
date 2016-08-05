@@ -22,6 +22,7 @@ source nvim/regex.vim
 set noautoindent
 set notimeout
 set nottimeout
+set nowrap
 
 "Map our 'implicit ending' character.
 nnoremap ÿ <esc>

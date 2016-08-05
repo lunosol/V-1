@@ -7,7 +7,8 @@ Options:
   -v --version  Display version
   -h --help     Show this screen.
   -u --utf8     Read the source file in utf8 encoding. This should be considered the default, but is a flag to keep the byte count lower.
-  -d            Debug mode. Opens in a visible nvim window
+  -d --debug    Debug mode. Opens in a visible nvim window
+  -x --hexdump  Print a hexdump of the source file encoded in CP1252 to STDERR
   -f FILE       Open on FILE
   -w FILE       Log vim keystrokes in FILE
   --safe        Do not allow shell access
@@ -19,6 +20,7 @@ import v
 
 from docopt import docopt
 import neovim
+import hexdump
 import utf8
 import subprocess
 import threading
@@ -29,7 +31,7 @@ import sys
 
 def main():
     has_secondary_file = args['-f']
-    external_neovim = args['-d']
+    external_neovim = args['--debug']
     source_file = args['FILE']
     args["platform"] = platform.system()
     if args["platform"] == "Darwin":
@@ -40,7 +42,7 @@ def main():
 
     source = utf8.enc_safe_file(source_file, args["--utf8"])
 
-    if not source.exists():
+    if not source.exists:
         print("Error:\nFile: {} not found.".format(source_file), file=sys.stderr)
         return
 
@@ -54,7 +56,6 @@ def main():
         reg += 1
 
     v_instance.nvim_instance.command(":let g:num_regs={}".format(reg))
-
     v_instance.set_register('z', os.path.abspath(source_file))
 
     for char in source.read():
@@ -62,12 +63,14 @@ def main():
 
     v_instance.clean_up()
 
+    if args['--hexdump']:
+        print(hexdump.dump(source.original_source.encode("CP1252")), file=sys.stderr)
+
     for line in v_instance.get_text():
         for char in line:
             print(char)
 
     v_instance.close()
-
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="Alpha 0.1")
