@@ -24,6 +24,10 @@ set notimeout
 set nottimeout
 set nowrap
 
+"Indention settings
+set expandtab
+set shiftwidth=1
+
 "Map our 'implicit ending' character.
 nnoremap ÿ <esc>
 inoremap ÿ <esc>
