@@ -35,6 +35,8 @@ class V:
         if self.args["--safe"]:
             self.nvim_instance.command("source nvim/safe_mode.vim")
 
+        self.input_mappings = {'\n' : '\r', '<': "<lt>"}
+
     def __call_nvim__(self):
         socket = os_code.get_socket_path(self.args)
 
@@ -42,8 +44,8 @@ class V:
         os.system(arg)
 
     def key_stroke(self, key):
-        if key == '\n':
-            key = '\r'
+        if key in self.input_mappings:
+            key = self.input_mappings[key]
         self.nvim_instance.input(key)
 
     def set_register(self, register, value):
