@@ -8,7 +8,7 @@ Options:
   -h --help     Show this screen.
   -u --utf8     Read the source file in utf8 encoding. This should be considered the default, but is a flag to keep the byte count lower.
   -d --debug    Debug mode. Opens in a visible nvim window
-  -x --hexdump  Print a hexdump of the source file encoded in CP1252 to STDERR
+  -x --hexdump  Print a hexdump of the source file encoded in latin1 to STDERR
   -f FILE       Open on FILE
   -w FILE       Log vim keystrokes in FILE
   --safe        Do not allow shell access
@@ -64,7 +64,7 @@ def main():
 
     if args['--hexdump']:
         xxd = subprocess.Popen("xxd", stdout=sys.stderr, stdin=subprocess.PIPE)
-        xxd.communicate(source.original_source.encode("CP1252"))
+        xxd.communicate(source.original_source.encode("latin1"))
 
     for line in v_instance.get_text():
         for char in line:

@@ -5,7 +5,7 @@ mapping = {'\n' : '\r'}
 
 class enc_safe_file():
     def __init__(self, file_name, utf8):
-        self.enc = "utf-8" if utf8 else "CP1252"
+        self.enc = "utf-8" if utf8 else "latin1"
 
         if os.path.exists(file_name):
             self.exists = True
