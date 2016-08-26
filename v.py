@@ -47,6 +47,7 @@ class V:
         if key in self.input_mappings:
             key = self.input_mappings[key]
         self.nvim_instance.input(key)
+        time.sleep(0.1)
 
     def set_register(self, register, value):
         command = ":let @{}='{}'".format(register, value)
