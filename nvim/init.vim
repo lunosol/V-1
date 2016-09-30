@@ -32,3 +32,6 @@ inoremap ÿ <esc>
 xnoremap ÿ <esc>
 cnoremap ÿ <cr>
 onoremap ÿ _
+
+"Give registers some default mappings
+call setreg('a', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')
