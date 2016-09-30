@@ -12,8 +12,6 @@ source nvim/plugin/surround.vim
 source nvim/plugin/exchange.vim
 
 "Source V specific source files
-source nvim/.init.vim-rplugin~
-source nvim/vmath.vim
 source nvim/motions.vim
 source nvim/normal_keys.vim
 source nvim/regex.vim
