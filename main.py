@@ -41,13 +41,11 @@ def main():
         args["ARGUMENTS"] = args["ARGUMENTS"][1:]
 
     if args["-s"] != None:    
-        if args["-s"].isnumeric():
+        if args["-s"].isdigit():
             args["-s"] = int(args["-s"]) / 100.0
         else:
             print("Sleep time must be a positive integer!")
             return
-
-    print(args)
 
     source = utf8.enc_safe_file(source_file, args["--utf8"])
 
