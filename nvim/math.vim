@@ -8,8 +8,8 @@ function! Inc()
   call feedkeys(l:count)
 endfunction
 
-nnoremap « :<C-u>call Dec()<cr>
-nnoremap - :<C-u>call Dec()<cr>
-xnoremap « :<C-u>call Dec()<cr>
-xnoremap - :<C-u>call Dec()<cr>
+nnoremap « :<C-u>call Inc()<cr>
+xnoremap « :<C-u>call Inc()<cr>
+nnoremap ­ :<C-u>call Dec()<cr>
+xnoremap ­ :<C-u>call Dec()<cr>
 
