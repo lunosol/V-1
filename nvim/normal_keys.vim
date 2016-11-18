@@ -48,7 +48,14 @@ function! Duplicate(type, ...) range
   if a:0  " Invoked from Visual mode, use gv command.
     silent exe "normal! gv".l:op
   elseif a:type == 'line'
-    silent exe "normal! '[V']".l:op
+    silent exe "normal! '[V']"
+    if line('.') == line('$')
+      if l:op != 'y'
+        let g:paste_num -= 1
+      endif
+      let l:op = 'y'
+    endif
+    silent exe "normal! ".l:op
   else
     silent exe "normal! `[v`]".l:op
   endif

@@ -11,12 +11,12 @@ Options:
   -x --hexdump  Print a hexdump of the source file encoded in latin1 to STDERR
   -f FILE       Open on FILE
   -w FILE       Log vim keystrokes in FILE
+  -s TIME       Sleep for TIME milliseconds between commands
   --safe        Do not allow shell access
 """
 
 from __future__ import print_function
 
-import v
 
 from docopt import docopt
 import neovim
@@ -27,6 +27,7 @@ import time
 import platform
 import os
 import sys
+import v
 
 def main():
     has_secondary_file = args['-f']
@@ -38,6 +39,13 @@ def main():
 
     if args["ARGUMENTS"][:1] == ['--']:
         args["ARGUMENTS"] = args["ARGUMENTS"][1:]
+
+    if args["-s"] != None:    
+        if args["-s"].isdigit():
+            args["-s"] = int(args["-s"]) / 100.0
+        else:
+            print("Sleep time must be a positive integer!")
+            return
 
     source = utf8.enc_safe_file(source_file, args["--utf8"])
 

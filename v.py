@@ -49,6 +49,9 @@ class V:
         self.nvim_instance.input(key)
         time.sleep(0.1)
 
+        if self.args["-s"]:
+            time.sleep(self.args["-s"])
+
     def set_register(self, register, value):
         command = ":let @{}='{}'".format(register, value)
         try:

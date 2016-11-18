@@ -15,3 +15,5 @@ Under the hood, V sends out keystrokes to neovim for all of it's text manipulati
 V seeks to fix all of these problems.
 
 If you would like to talk about V, whether it's to seek golfing advice in V, to become a contributor, or even just to learn about the language, feel free to either bring it up in the V [chat room](http://chat.stackexchange.com/rooms/40448/v) on PPCG, or to ping me in [The Nineteenth Byte](http://chat.stackexchange.com/rooms/240/the-nineteenth-byte).
+
+V is released under the same license as [The Vim License](https://github.com/vim/vim/blob/0b9e4d1224522791c0dbbd45742cbd688be823f3/runtime/doc/uganda.txt).
