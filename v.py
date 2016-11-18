@@ -65,7 +65,7 @@ class V:
 
     def get_text(self):
         for line in self.nvim_instance.buffers:
-            yield line
+            return line
 
     def close(self):
         if not self.args["--debug"]:

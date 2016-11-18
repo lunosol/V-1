@@ -74,9 +74,9 @@ def main():
         xxd = subprocess.Popen("xxd", stdout=sys.stderr, stdin=subprocess.PIPE)
         xxd.communicate(source.original_source.encode("latin1"))
 
-    for line in v_instance.get_text():
-        for char in line:
-            print(char)
+    buf = v_instance.get_text()
+    output = "\n".join(buf)
+    print(output, end="")
 
     v_instance.close()
 
