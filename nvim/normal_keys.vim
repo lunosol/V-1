@@ -43,6 +43,14 @@ endfunction
 nnoremap ò :<C-u>call RecursiveQ(v:count1)<cr>
 nnoremap 0ò :<C-u>call RecursiveQ(0)<cr>
 
+function! PasteOver(before)
+  let l:com = 'R'.(a:before ? '' : "\<right>").repeat(getreg(v:register), v:count1)."\<esc>l"
+  silent exe "normal! ".l:com
+endfunction
+
+nnoremap ð :<C-u>call PasteOver(0)<cr>
+nnoremap Ð :<C-u>call PasteOver(1)<cr>
+
 function! Duplicate(type, ...) range
   let l:op = g:paste_num ? 'd' : 'y'
   if a:0  " Invoked from Visual mode, use gv command.
