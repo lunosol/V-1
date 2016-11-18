@@ -47,6 +47,7 @@ class V:
         if key in self.input_mappings:
             key = self.input_mappings[key]
         self.nvim_instance.input(key)
+        time.sleep(0.1)
 
         if self.args["-s"]:
             time.sleep(self.args["-s"])
@@ -64,7 +65,7 @@ class V:
 
     def get_text(self):
         for line in self.nvim_instance.buffers:
-            yield line
+            return line
 
     def close(self):
         if not self.args["--debug"]:
