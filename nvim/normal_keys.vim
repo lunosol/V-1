@@ -111,7 +111,6 @@ inoremap · <C-o>:<C-u>call RepCharInsert(7)<cr>
 inoremap ¸ <C-o>:<C-u>call RepCharInsert(8)<cr>
 inoremap ¹ <C-o>:<C-u>call RepCharInsert(9)<cr>
 
-
 function! InsertRange()
   let l:a = getchar()
   let l:b = getchar()
@@ -119,6 +118,7 @@ function! InsertRange()
 endfunction
 
 inoremap º <C-o>:call InsertRange()<cr>
+nnoremap º i<C-o>:call InsertRange()<cr><esc>
 
 "Minor mappings:
 
@@ -133,3 +133,6 @@ xnoremap î :norm<space>
 xnoremap Î :%norm<space>
 cnoremap î norm<space>
 cnoremap Î %norm<space>
+
+"Mapping reverse indent mode
+inoremap <C-_> <C-o>:se ri!<cr>
