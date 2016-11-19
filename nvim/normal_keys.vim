@@ -111,6 +111,15 @@ inoremap · <C-o>:<C-u>call RepCharInsert(7)<cr>
 inoremap ¸ <C-o>:<C-u>call RepCharInsert(8)<cr>
 inoremap ¹ <C-o>:<C-u>call RepCharInsert(9)<cr>
 
+
+function! InsertRange()
+  let l:a = getchar()
+  let l:b = getchar()
+  silent exe "normal! gi"."\<C-v>".join(range(a, b), "\<C-v>")."\<esc>l"
+endfunction
+
+inoremap º <C-o>:call InsertRange()<cr>
+
 "Minor mappings:
 
 "<M-R>, or (R)eplace. Useful for replacing an entire line with another
