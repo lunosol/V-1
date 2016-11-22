@@ -117,8 +117,8 @@ function! InsertRange()
   silent exe "normal! gi"."\<C-v>".join(range(a, b), "\<C-v>")."\<esc>l"
 endfunction
 
-inoremap º <C-o>:call InsertRange()<cr>
-nnoremap º i<C-o>:call InsertRange()<cr><esc>
+inoremap ¬ <C-o>:call InsertRange()<cr>
+nnoremap ¬ i<C-o>:call InsertRange()<cr><esc>
 
 "Minor mappings:
 
