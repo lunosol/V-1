@@ -30,7 +30,6 @@ import sys
 import v
 
 def main():
-    has_secondary_file = args['-f']
     external_neovim = args['--debug']
     source_file = args['FILE']
     args["platform"] = platform.system()
@@ -46,6 +45,9 @@ def main():
         else:
             print("Sleep time must be a positive integer!")
             return
+
+    if args["-f"] != None:
+        args["-f"] = os.path.abspath(args["-f"])
 
     source = utf8.enc_safe_file(source_file, args["--utf8"])
 
