@@ -12,25 +12,29 @@ class V:
     def __init__(self, args):
         self.args = args
 
-        if args["--debug"]:
-            nvim_launcher_thread = threading.Thread(target=self.__call_nvim__) #Launch nvim in new thread so that V doesn't hang
-            nvim_launcher_thread.start()
-            time.sleep(1)
-            socket = os_code.get_socket_path(args)
+        try:
+            if args["--debug"]:
+                nvim_launcher_thread = threading.Thread(target=self.__call_nvim__) #Launch nvim in new thread so that V doesn't hang
+                nvim_launcher_thread.start()
+                time.sleep(1)
+                socket = os_code.get_socket_path(args)
 
-            try:
-                self.nvim_instance = neovim.attach("socket", path=socket)
-            except py33_exceptions.FileNotFoundError:
-                sys.stderr.write("Couldn't connect to nvim. Did you export your NVIM_LIST_ADDRESS?\n\n")
-                sys.exit()
+                try:
+                    self.nvim_instance = neovim.attach("socket", path=socket)
+                except py33_exceptions.FileNotFoundError:
+                    sys.stderr.write("Couldn't connect to nvim. Did you export your NVIM_LIST_ADDRESS?\n\n")
+                    sys.exit()
 
-        else:
-            args = os_code.get_embedded_nvim_args(args)
-            try:
-                self.nvim_instance = neovim.attach("child", argv=args)
-            except py33_exceptions.FileNotFoundError:
-                sys.stderr.write("Couldn't find the neovim executable! Is nvim in your $PATH?\n\n")
-                sys.exit()
+            else:
+                args = os_code.get_embedded_nvim_args(args)
+                try:
+                    self.nvim_instance = neovim.attach("child", argv=args)
+                except py33_exceptions.FileNotFoundError:
+                    sys.stderr.write("Couldn't find the neovim executable! Is nvim in your $PATH?\n\n")
+                    sys.exit()
+        except IOError:
+            sys.stderr.write("Couldn't find the neovim executable! Is neovim installed?\n\n")
+            sys.exit()
 
         if self.args["--safe"]:
             self.nvim_instance.command("source nvim/safe_mode.vim")
