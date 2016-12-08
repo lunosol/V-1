@@ -125,6 +125,15 @@ inoremap ¬ <C-o>:call InsertRange('gi')<cr>
 nnoremap ¬ i<C-o>:call InsertRange('i')<cr><esc>
 
 "Minor mappings:
+"<M-h> for (h)ollow.
+nnoremap è ^lv$hhr<space>
+nnoremap <expr> È '^lv$hhr'.nr2char(getchar())
+
+"<M-b> for (b)reak. Break a macro on a common conditional for macros
+nnoremap â ^l
+
+"<M-/> for slide
+nnoremap ¯ ^lx>>
 
 "<M-R>, or (R)eplace. Useful for replacing an entire line with another
 "character.
