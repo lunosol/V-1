@@ -1,15 +1,16 @@
-function! SingleInsert()
+function! SingleInsert(com, count)
   let c = nr2char(getchar())
-  exe "normal! ".v:count1."i".c."\<esc>"
+  exe "normal! ".a:com.repeat(c, a:count)."\<esc>"
 endfunction
 
-function! SingleAppend()
-  let c = nr2char(getchar())
-  exe "normal! ".v:count1."a".c."\<esc>"
-endfunction
-
-nnoremap é :<C-u>call SingleInsert()<CR>
-nnoremap á :<C-u>call SingleAppend()<CR>
+nnoremap é :<C-u>call SingleInsert('i', v:count1)<CR>
+nnoremap É :<C-u>call SingleInsert('I', v:count1)<CR>
+nnoremap 0é :<C-u>call SingleInsert('i', 0)<CR>
+nnoremap 0É :<C-u>call SingleInsert('I', 0)<CR>
+nnoremap á :<C-u>call SingleInsert('a', v:count1)<CR>
+nnoremap Á :<C-u>call SingleInsert('A', v:count1)<CR>
+nnoremap 0á :<C-u>call SingleInsert('a', 0)<CR>
+nnoremap 0Á :<C-u>call SingleInsert('A', 0)<CR>
 
 function! RecordQ(count)
   let c = nr2char(getchar())
@@ -79,6 +80,9 @@ nnoremap ä :<C-u>let g:paste_num=v:count<cr>:set opfunc=Duplicate<cr>g@
 nnoremap Ä :<C-u>let g:paste_num=v:count<cr>:set opfunc=Duplicate<cr>g@_
 nnoremap 0Ä :<C-u>let g:paste_num=-1<cr>:set opfunc=Duplicate<cr>g@_
 nnoremap 0ä :<C-u>let g:paste_num=-1<cr>:set opfunc=Duplicate<cr>g@
+"Duplicate line after
+nnoremap Ù :<C-u>exec 'norm Y'.v:count.'p'<cr>
+nnoremap 0Ù dd
 
 let g:active_reg = 0
 let g:num_regs = 1
@@ -111,14 +115,14 @@ inoremap · <C-o>:<C-u>call RepCharInsert(7)<cr>
 inoremap ¸ <C-o>:<C-u>call RepCharInsert(8)<cr>
 inoremap ¹ <C-o>:<C-u>call RepCharInsert(9)<cr>
 
-function! InsertRange()
+function! InsertRange(com)
   let l:a = getchar()
   let l:b = getchar()
-  silent exe "normal! gi"."\<C-v>".join(range(a, b), "\<C-v>")."\<esc>l"
+  silent exe "normal! ".a:com."\<C-v>".join(range(a, b), "\<C-v>")."\<esc>l"
 endfunction
 
-inoremap ¬ <C-o>:call InsertRange()<cr>
-nnoremap ¬ i<C-o>:call InsertRange()<cr><esc>
+inoremap ¬ <C-o>:call InsertRange('gi')<cr>
+nnoremap ¬ i<C-o>:call InsertRange('i')<cr><esc>
 
 "Minor mappings:
 
