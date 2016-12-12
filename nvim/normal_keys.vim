@@ -115,14 +115,17 @@ inoremap · <C-o>:<C-u>call RepCharInsert(7)<cr>
 inoremap ¸ <C-o>:<C-u>call RepCharInsert(8)<cr>
 inoremap ¹ <C-o>:<C-u>call RepCharInsert(9)<cr>
 
-function! InsertRange(com)
+function! InsertRange(mode)
+  if a:mode == 'n'
+    normal i
+  endif
   let l:a = getchar()
   let l:b = getchar()
-  silent exe "normal! ".a:com."\<C-v>".join(range(a, b), "\<C-v>")."\<esc>l"
+  silent exe "normal! gi\<C-v>".join(range(a, b), "\<C-v>")."\<esc>l"
 endfunction
 
-inoremap ¬ <C-o>:call InsertRange('gi')<cr>
-nnoremap ¬ i<C-o>:call InsertRange('i')<cr><esc>
+inoremap ¬ <C-o>:call InsertRange('i')<cr>
+nnoremap ¬ :call InsertRange('n')<cr>
 
 "Minor mappings:
 "<M-h> for (h)ollow.
