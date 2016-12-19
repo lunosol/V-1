@@ -11,13 +11,13 @@ nnoremap L :<C-u>call L('n', v:count)<cr>
 xnoremap L :<C-u>call L('v', v:count)<cr>
 onoremap L :<C-u>call L('o', v:count)<cr>
 
-nnoremap ã :<C-u>call cursor(0, len(getline('.'))/2)<cr>
-xnoremap ã :<C-u>exec 'normal gv' \| call cursor(0, len(getline('.'))/2)<cr>
-onoremap ã :<C-u>call cursor(0, len(getline('.'))/2)<cr>
+nnoremap ã :<C-u>call cursor(0, (len(getline('.')) + 1) / 2)<cr>
+xnoremap ã :<C-u>exec 'normal gv' \| call cursor(0, (len(getline('.')) + 1) / 2)<cr>
+onoremap ã :<C-u>call cursor(0, (len(getline('.')) + 1) / 2)<cr>
 
-nnoremap <expr> M (line('$')/2).'G'
-xnoremap <expr> M (line('$')/2).'G'
-onoremap <expr> M (line('$')/2).'G'
+nnoremap <expr> M ((line('$') + 1) / 2).'G'
+xnoremap <expr> M ((line('$') + 1) / 2).'G'
+onoremap <expr> M ((line('$') + 1) / 2).'G'
 
 nnoremap H gg
 xnoremap H gg
