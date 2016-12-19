@@ -15,6 +15,10 @@ nnoremap ã :<C-u>call cursor(0, (len(getline('.')) + 1) / 2)<cr>
 xnoremap ã :<C-u>exec 'normal gv' \| call cursor(0, (len(getline('.')) + 1) / 2)<cr>
 onoremap ã :<C-u>call cursor(0, (len(getline('.')) + 1) / 2)<cr>
 
+nnoremap Ã :<C-u>call cursor((line('$') + 1) / 2, 0) \| call cursor(0, (len(getline('.')) + 1) / 2)<cr>
+xnoremap Ã :<C-u>exec 'normal gv' \| call cursor((line('$') + 1) / 2, 0) \| call cursor(0, (len(getline('.')) + 1) / 2)<cr>
+onoremap Ã :<C-u>call cursor((line('$') + 1) / 2, 0) \| call cursor(0, (len(getline('.')) + 1) / 2)<cr>
+
 nnoremap <expr> M ((line('$') + 1) / 2).'G'
 xnoremap <expr> M ((line('$') + 1) / 2).'G'
 onoremap <expr> M ((line('$') + 1) / 2).'G'
