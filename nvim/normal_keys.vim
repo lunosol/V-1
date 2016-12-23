@@ -53,26 +53,23 @@ nnoremap ð :<C-u>call PasteOver(0)<cr>
 nnoremap Ð :<C-u>call PasteOver(1)<cr>
 
 function! Duplicate(type, ...) range
-  let l:op = g:paste_num ? 'd' : 'y'
+  let l:yank_op = g:paste_num ? 'd' : 'y'
+  let l:paste_op = 'P'
+  if line('.') == line('$') && l:yank_op == 'd' && a:type == 'line'
+    let l:paste_op = 'p'
+  endif
   if a:0  " Invoked from Visual mode, use gv command.
-    silent exe "normal! gv".l:op
+    silent exe "normal! gv".l:yank_op
   elseif a:type == 'line'
-    silent exe "normal! '[V']"
-    if line('.') == line('$')
-      if l:op != 'y'
-        let g:paste_num -= 1
-      endif
-      let l:op = 'y'
-    endif
-    silent exe "normal! ".l:op
+    silent exe "normal! '[V']".l:yank_op
   else
-    silent exe "normal! `[v`]".l:op
+    silent exe "normal! `[v`]".l:yank_op
   endif
 
   if g:paste_num > 0
-    silent exe "normal! ".g:paste_num."P"
+    silent exe "normal! ".g:paste_num.l:paste_op
   elseif g:paste_num == 0
-    silent exe "normal! P"
+    silent exe "normal! ".l:paste_op
   endif
 endfunction
 
@@ -80,6 +77,7 @@ nnoremap ä :<C-u>let g:paste_num=v:count<cr>:set opfunc=Duplicate<cr>g@
 nnoremap Ä :<C-u>let g:paste_num=v:count<cr>:set opfunc=Duplicate<cr>g@_
 nnoremap 0Ä :<C-u>let g:paste_num=-1<cr>:set opfunc=Duplicate<cr>g@_
 nnoremap 0ä :<C-u>let g:paste_num=-1<cr>:set opfunc=Duplicate<cr>g@
+
 "Duplicate line after
 nnoremap Ù :<C-u>exec 'norm Y'.v:count.'p'<cr>
 nnoremap 0Ù dd
