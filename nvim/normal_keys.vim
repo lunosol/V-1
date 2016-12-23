@@ -84,6 +84,7 @@ nnoremap 0Ù dd
 
 let g:active_reg = 0
 let g:num_regs = 1
+
 function! NextActiveRegister(BaseCommand)
   echo a:BaseCommand
   let active_reg = nr2char(g:active_reg + 97)
@@ -99,19 +100,37 @@ nnoremap ¢ :<C-u>call NextActiveRegister("'")<CR>
 inoremap ò <C-o>:<C-u>call NextActiveRegister('<C-v><C-r>')<CR>
 
 function! RepCharInsert(n)
-  let c = nr2char(getchar())
-  call feedkeys(repeat(c, a:n), 'i')
+  let l:c = getchar()
+  if l:c >= 175 && l:c <= 185
+    return RepCharInsert((a:n * 10) + l:c - 176)
+  endif
+
+  if l:c == 22
+    let l:c = nr2char(getchar())
+  elseif l:c == 18
+    let l:c = getreg(nr2char(getchar()))
+  else
+    let l:c = nr2char(l:c)
+  endif
+
+  let l:rep_count = a:n
+  if a:n == 1
+    let l:rep_count = 10
+  endif
+
+  return repeat(l:c, a:n)
 endfunction
 
-inoremap ± <C-o>:<C-u>call RepCharInsert(10)<cr>
-inoremap ² <C-o>:<C-u>call RepCharInsert(20)<cr>
-inoremap ³ <C-o>:<C-u>call RepCharInsert(3)<cr>
-inoremap ´ <C-o>:<C-u>call RepCharInsert(4)<cr>
-inoremap µ <C-o>:<C-u>call RepCharInsert(5)<cr>
-inoremap ¶ <C-o>:<C-u>call RepCharInsert(6)<cr>
-inoremap · <C-o>:<C-u>call RepCharInsert(7)<cr>
-inoremap ¸ <C-o>:<C-u>call RepCharInsert(8)<cr>
-inoremap ¹ <C-o>:<C-u>call RepCharInsert(9)<cr>
+inoremap <expr> ° RepCharInsert(0)
+inoremap <expr> ± RepCharInsert(1)
+inoremap <expr> ² RepCharInsert(2)
+inoremap <expr> ³ RepCharInsert(3)
+inoremap <expr> ´ RepCharInsert(4)
+inoremap <expr> µ RepCharInsert(5)
+inoremap <expr> ¶ RepCharInsert(6)
+inoremap <expr> · RepCharInsert(7)
+inoremap <expr> ¸ RepCharInsert(8)
+inoremap <expr> ¹ RepCharInsert(9)
 
 function! InsertRange(mode)
   if a:mode == 'n'
