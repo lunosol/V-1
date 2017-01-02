@@ -22,6 +22,7 @@ set noautoindent
 set notimeout
 set nottimeout
 set nowrap
+set nohlsearch
 
 "Indention settings
 set expandtab
