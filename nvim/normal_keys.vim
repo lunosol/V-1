@@ -55,9 +55,17 @@ nnoremap Ð :<C-u>call PasteOver(1)<cr>
 function! Duplicate(type, ...) range
   let l:yank_op = g:paste_num ? 'd' : 'y'
   let l:paste_op = 'P'
+
+  "Handle a bunch of annoying special cases
   if line("']") == line('$') && l:yank_op == 'd' && a:type == 'line'
     let l:paste_op = 'p'
+    if line("'[") == line("']") && g:paste_num > 0
+      let g:paste_num = g:paste_num - 1
+      let l:paste_op = 'P'
+      let l:yank_op = 'y'
+    endif
   endif
+
   if a:0  " Invoked from Visual mode, use gv command.
     silent exe "normal! gv".l:yank_op
   elseif a:type == 'line'
