@@ -1,6 +1,6 @@
 let g:RegexShortcuts = {129: '.*', 130: '.+', 131: '.\{-}', 132: '[^', 133: '\ze', 135: '\{-}', 147: '\zs'}
 
-function! Search(com)
+function! Search(com, count)
   let c = getchar()
   let command = ""
   while c != 13 && c != 255
@@ -13,11 +13,11 @@ function! Search(com)
     endif
     let c = getchar()
   endwhile
-  call feedkeys(a:com.command."\<CR>", "in")
+  call feedkeys(a:count.a:com.command."\<CR>", "in")
 endfunction
 
-nnoremap / :<C-u>call Search("/")<CR>
-nnoremap ? :<C-u>call Search("?")<CR>
+nnoremap / :<C-u>call Search("/", v:count1)<CR>
+nnoremap ? :<C-u>call Search("?", v:count1)<CR>
 
 function! Substitute(com, global)
   let c = getchar()
