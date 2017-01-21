@@ -75,25 +75,9 @@ xnoremap í :<C-u>call Substitute(":'<,'>s/", 0, 'x')<CR>
 xnoremap Í :<C-u>call Substitute(":'<,'>s/", 1, 'x')<CR>
 
 function! Global(com)
-  let c = getchar()
-  let command = ""
-
-  while c != char2nr('/')
-    if nr2char(c) == "\\"
-      let command .= "\\".nr2char(getchar())
-    elseif has_key(g:RegexShortcuts, c)
-      let command .= g:RegexShortcuts[c]
-    elseif c == 255
-      "If we get here, there's no point trying to parse the rest of the
-      "command. Bail right now!
-      return 0
-    elseif c > 128
-      let command .= "\\".nr2char(c - 128)
-    else
-      let command .= nr2char(c)
-    endif
-    let c = getchar()
-  endwhile
+  let info = GetRegex(1)
+  let command = info[0]
+  let slashes = info[1]
 
   let command .= "/norm "
 
@@ -110,3 +94,5 @@ endfunction
 
 nnoremap ç :<C-u>call Global(":g/")<CR>
 nnoremap Ç :<C-u>call Global(":g!/")<CR>
+xnoremap ç :<C-u>call Global(":'<,'>g/")<CR>
+xnoremap Ç :<C-u>call Global(":'<,'>g!/")<CR>
