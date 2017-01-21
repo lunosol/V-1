@@ -47,7 +47,7 @@ xnoremap 0/ :<C-u>call Search("/", 0, "x")<CR>
 xnoremap 0? :<C-u>call Search("?", 0, "x")<CR>
 
 function! Substitute(com, global, mode)
-  let info = GetRegex(2)
+  let info = GetRegex(3)
   let command = info[0]
   let slashes = info[1]
   
@@ -62,7 +62,7 @@ function! Substitute(com, global, mode)
 
   echo a:com.command
 
-"  call feedkeys(a:com.command."\<CR>", "in")
+  call feedkeys(a:com.command."\<CR>", "in")
 endfunction
 
 nnoremap ó :<C-u>call Substitute(":s/", 0, 'n')<CR>
