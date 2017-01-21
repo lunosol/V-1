@@ -46,44 +46,33 @@ xnoremap ? :<C-u>call Search("?", v:count1, "x")<CR>
 xnoremap 0/ :<C-u>call Search("/", 0, "x")<CR>
 xnoremap 0? :<C-u>call Search("?", 0, "x")<CR>
 
-function! Substitute(com, global)
-  let c = getchar()
-  let command = ""
-  let slashes_seen = 0
-
-  while c != 13 && c != 255
-    if nr2char(c) == "/"
-      let slashes_seen += 1
-    endif
-
-    if nr2char(c) == "\\"
-      let command .= "\\".nr2char(getchar())
-    elseif has_key(g:RegexShortcuts, c)
-      let command .= g:RegexShortcuts[c]
-    elseif c > 128
-      let command .= "\\".nr2char(c - 128)
-    else
-      let command .= nr2char(c)
-    endif
-    let c = getchar()
-  endwhile
-
-  while slashes_seen < 2
-    let command .= "/"
-    let slashes_seen += 1
+function! Substitute(com, global, mode)
+  let info = GetRegex(2)
+  let command = info[0]
+  let slashes = info[1]
+  
+  while slashes < 2
+    let command .= '/'
+    let slashes += 1
   endwhile
 
   if a:global
-    let command .= "g"
+    let command .= 'g'
   endif
 
-  call feedkeys(a:com.command."\<CR>", "in")
+  echo a:com.command
+
+"  call feedkeys(a:com.command."\<CR>", "in")
 endfunction
 
-nnoremap ó :<C-u>call Substitute(":s/", 0)<CR>
-nnoremap Ó :<C-u>call Substitute(":s/", 1)<CR>
-nnoremap í :<C-u>call Substitute(":%s/", 0)<CR>
-nnoremap Í :<C-u>call Substitute(":%s/", 1)<CR>
+nnoremap ó :<C-u>call Substitute(":s/", 0, 'n')<CR>
+nnoremap Ó :<C-u>call Substitute(":s/", 1, 'n')<CR>
+nnoremap í :<C-u>call Substitute(":%s/", 0, 'n')<CR>
+nnoremap Í :<C-u>call Substitute(":%s/", 1, 'n')<CR>
+xnoremap ó :<C-u>call Substitute(":'<,'>s/\%V", 0, 'x')<CR>
+xnoremap Ó :<C-u>call Substitute(":'<,'>s/\%V", 1, 'x')<CR>
+xnoremap í :<C-u>call Substitute(":'<,'>s/", 0, 'x')<CR>
+xnoremap Í :<C-u>call Substitute(":'<,'>s/", 1, 'x')<CR>
 
 function! Global(com)
   let c = getchar()
