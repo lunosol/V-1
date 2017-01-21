@@ -96,3 +96,25 @@ nnoremap ç :<C-u>call Global(":g/")<CR>
 nnoremap Ç :<C-u>call Global(":g!/")<CR>
 xnoremap ç :<C-u>call Global(":'<,'>g/")<CR>
 xnoremap Ç :<C-u>call Global(":'<,'>g!/")<CR>
+
+function! Sort(mode)
+  let c = getchar()
+  let command = (a:mode == 'x' ? ":'<,'>" : ':').'sort '
+
+  while c != 13 && c != 47 && c != 255
+    let command .= nr2char(c)
+    let c = getchar()
+  endwhile
+
+  "'/', add a regex
+  if c == 47
+    let command .= ' /'.GetRegex(0)[0].'/'
+  endif
+
+  call feedkeys(command."\<CR>", "in")
+endfunction
+
+nnoremap ú :<C-u>call Sort('n')<cr>
+nnoremap Ú :<C-u>call Sort('n')<cr><cr>
+xnoremap ú :<C-u>call Sort('x')<cr>
+xnoremap Ú :<C-u>call Sort('x')<cr><cr>
