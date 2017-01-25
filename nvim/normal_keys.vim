@@ -53,11 +53,13 @@ nnoremap ð :<C-u>call PasteOver(0)<cr>
 nnoremap Ð :<C-u>call PasteOver(1)<cr>
 
 function! Duplicate(type, ...) range
-  let l:yank_op = g:paste_num ? 'd' : 'y'
-  let l:paste_op = 'P'
+  let l:yank_op = g:paste_num == -1 ? 'y' : 'd'
+
   if line("']") == line('$') && l:yank_op == 'd' && a:type == 'line'
-    let l:paste_op = 'p'
+    let l:yank_op = 'y'
+    let g:paste_num = g:paste_num - 1
   endif
+
   if a:0  " Invoked from Visual mode, use gv command.
     silent exe "normal! gv".l:yank_op
   elseif a:type == 'line'
@@ -67,16 +69,16 @@ function! Duplicate(type, ...) range
   endif
 
   if g:paste_num > 0
-    silent exe "normal! ".g:paste_num.l:paste_op
-  elseif g:paste_num == 0
-    silent exe "normal! ".l:paste_op
+    silent exe "normal! ".g:paste_num."P"
+  elseif g:paste_num == -1
+    silent exe "normal! "."P"
   endif
 endfunction
 
-nnoremap ä :<C-u>let g:paste_num=v:count<cr>:set opfunc=Duplicate<cr>g@
-nnoremap Ä :<C-u>let g:paste_num=v:count<cr>:set opfunc=Duplicate<cr>g@_
-nnoremap 0Ä :<C-u>let g:paste_num=-1<cr>:set opfunc=Duplicate<cr>g@_
-nnoremap 0ä :<C-u>let g:paste_num=-1<cr>:set opfunc=Duplicate<cr>g@
+nnoremap ä :<C-u>let g:paste_num=v:count ? v:count : -1<cr>:set opfunc=Duplicate<cr>g@
+nnoremap Ä :<C-u>let g:paste_num=v:count ? v:count : -1<cr>:set opfunc=Duplicate<cr>g@_
+nnoremap 0Ä dd
+nnoremap 0ä d
 
 "Duplicate line after
 nnoremap Ù :<C-u>exec 'norm Y'.v:count.'p'<cr>
@@ -169,3 +171,9 @@ cnoremap Î %norm<space>
 
 "Mapping reverse indent mode
 inoremap <C-_> <C-o>:se ri!<cr>
+
+nnoremap <expr> gó ":\<C-U>sleep ".(v:count ? v:count : 250)."ms\<CR>"
+nnoremap <expr> gÓ ":\<C-U>sleep ".((v:count ? v:count : 5) * 100)."ms\<CR>"
+
+nnoremap ï o<esc>
+nnoremap Ï O<esc>

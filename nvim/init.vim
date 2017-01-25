@@ -24,6 +24,9 @@ set nottimeout
 set nowrap
 set nohlsearch
 
+"Change 'formatoptions' to not remove comments when joining
+set formatoptions-=j
+
 "Indention settings
 set expandtab
 set shiftwidth=1
