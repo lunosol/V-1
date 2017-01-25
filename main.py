@@ -75,7 +75,7 @@ def main():
         xxd = subprocess.Popen("xxd", stdout=sys.stderr, stdin=subprocess.PIPE)
         xxd.communicate(source.original_source.encode("latin1"))
 
-    buf = v_instance.get_text()
+    buf = v_instance.get_buffer()
     output = "\n".join(buf)
     print(output, end="")
 
