@@ -2,7 +2,6 @@ import codecs
 import os
 import re
 
-mapping = {'\n' : '\r'}
 verbose_mappings = { u"<lb>": '<', u"<rb>": '>', u"<esc>": chr(27), u"<bs>": chr(8), u"<del>": chr(127) }
 ctrl_mappings = { u'[': chr(27), u'\\': chr(28), u']': chr(29), u"^": chr(30), u"_": chr(31), u"?": chr(127)}
 
@@ -24,7 +23,9 @@ class enc_safe_file():
     def read(self):
         if not self.exists:
             yield []
-        for com in re.findall(self.regex, self.original_source):
+        for com in re.findall(self.regex, self.original_source, re.DOTALL):
+            if com == '\n':
+                com = '\r'
             yield get_encoded_command(com)
 
 def get_encoded_command(com):
