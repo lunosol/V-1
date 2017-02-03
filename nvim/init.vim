@@ -22,6 +22,7 @@ set noautoindent
 set notimeout
 set nottimeout
 set nowrap
+set nohlsearch
 
 "Change 'formatoptions' to not remove comments when joining
 set formatoptions-=j

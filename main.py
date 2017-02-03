@@ -4,7 +4,7 @@
   main.py FILE [options] [-- ARGUMENTS ... ]
 
 Options:
-  -v --version  Display version
+  -v --verbose  Run in verbose mode
   -h --help     Show this screen.
   -u --utf8     Read the source file in utf8 encoding. This should be considered the default, but is a flag to keep the byte count lower.
   -d --debug    Debug mode. Opens in a visible nvim window
@@ -17,7 +17,6 @@ Options:
 
 from __future__ import print_function
 
-
 from docopt import docopt
 import neovim
 import utf8
@@ -29,7 +28,6 @@ import os
 import sys
 import v
 
-#Just a test, please ignore
 def main():
     external_neovim = args['--debug']
     source_file = args['FILE']
@@ -50,7 +48,7 @@ def main():
     if args["-f"] != None:
         args["-f"] = os.path.abspath(args["-f"])
 
-    source = utf8.enc_safe_file(source_file, args["--utf8"])
+    source = utf8.enc_safe_file(source_file, args["--utf8"], args["--verbose"])
 
     if not source.exists:
         print("Error:\nFile: {} not found.".format(source_file), file=sys.stderr)
@@ -77,7 +75,7 @@ def main():
         xxd = subprocess.Popen("xxd", stdout=sys.stderr, stdin=subprocess.PIPE)
         xxd.communicate(source.original_source.encode("latin1"))
 
-    buf = v_instance.get_text()
+    buf = v_instance.get_buffer()
     output = "\n".join(buf)
     print(output, end="")
 

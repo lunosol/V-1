@@ -67,9 +67,8 @@ class V:
     def get_mode(self):
         return self.nvim_instance.eval("mode(1)")
 
-    def get_text(self):
-        for line in self.nvim_instance.buffers:
-            return line
+    def get_buffer(self):
+        return self.nvim_instance.current.buffer
 
     def close(self):
         if not self.args["--debug"]:
