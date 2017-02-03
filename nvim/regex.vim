@@ -99,10 +99,14 @@ xnoremap Ç :<C-u>call Global(":'<,'>g!/")<CR>
 
 function! Sort(mode)
   let c = getchar()
-  let command = (a:mode == 'x' ? ":'<,'>" : ':').'sort '
+  let command = (a:mode == 'x' ? ":'<,'>" : ':').'sort'
+
+  if c != char2nr('!')
+    let command .= ' '
+  endif
 
   while c != 13 && c != 47 && c != 255
-    let command .= nr2char(c)
+    let command .= nr2char(c).' '
     let c = getchar()
   endwhile
 
