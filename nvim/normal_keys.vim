@@ -172,7 +172,7 @@ cnoremap Î %norm<space>
 "Mapping reverse indent mode
 inoremap <C-_> <C-o>:se ri!<cr>
 
-nnoremap <expr> gó ":\<C-U>sleep ".(v:count ? v:count : 250)."ms\<CR>"
+nnoremap <expr> gó ":\<C-U>sleep ".(v:count ? v:count : 100)."ms\<CR>"
 nnoremap <expr> gÓ ":\<C-U>sleep ".((v:count ? v:count : 5) * 100)."ms\<CR>"
 
 nnoremap ï o<esc>
