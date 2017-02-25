@@ -138,7 +138,10 @@ function! InsertRange(mode, count)
   let l:a = getchar()
   let l:b = getchar()
   let l:stride = a < b ? 1 : -1
-  silent exe "normal! gi\<C-v>".repeat(join(range(l:a, l:b, l:stride), "\<C-v>"), a:count)."\<esc>l"
+  silent exe "normal! gi\<C-v>".repeat(join(range(l:a, l:b, l:stride), "\<C-v>"), a:count)
+  if a:mode == 'i'
+    silent exe "normal! gi"
+  endif
 endfunction
 
 inoremap ¬ <C-o>:call InsertRange('i', v:count1)<cr>
