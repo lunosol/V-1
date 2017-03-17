@@ -64,6 +64,8 @@ function! Duplicate(type, ...) range
     silent exe "normal! gv".l:yank_op
   elseif a:type == 'line'
     silent exe "normal! '[V']".l:yank_op
+  elseif a:type == 'block'
+    silent exe "normal! `[\<C-v>`]".l:yank_op
   else
     silent exe "normal! `[v`]".l:yank_op
   endif
